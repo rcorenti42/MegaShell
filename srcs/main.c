@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:28:55 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/01/24 13:04:55 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:17:55 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static void	init_shell(t_shell **shell)
 	tmp = *shell;
 	tmp.exit = 0;
 	tmp.ret = 0;
+	tmp.in = dup(STDIN);
+	tmp.out = dup(STDOUT);
 }
 
 int		main(int argc, char **argv, char **envp)
