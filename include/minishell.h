@@ -6,15 +6,17 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/01/26 02:16:31 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/01/26 07:05:31 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
+# include "../libft/include/libft.h"
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
@@ -56,6 +58,8 @@ typedef struct		s_shell
 {
 	int		in;
 	int		out;
+	int		ret;
+	int		exit;
 	t_env		*env;
 }			t_shell;
 
