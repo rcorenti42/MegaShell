@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/01/24 16:28:51 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/01/26 02:16:31 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ typedef struct		s_env
 
 typedef struct		s_shell
 {
+	int		in;
+	int		out;
 	t_env		*env;
 }			t_shell;
 
