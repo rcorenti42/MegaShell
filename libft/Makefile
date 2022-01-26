@@ -6,7 +6,7 @@
 #    By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/25 21:57:34 by rcorenti          #+#    #+#              #
-#    Updated: 2022/01/25 22:49:45 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/01/26 02:28:50 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ DIR_O = ft_memdel.c \
 	ft_putstr_fd.c \
 	ft_strcat.c \
 	ft_strcmp.c \
-	ft_strlen.c
+	ft_strlen.c \
+	ft_strdup.c
 
 OBJ = $(SRC:.c=.o)
 

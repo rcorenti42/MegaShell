@@ -1,27 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/25 21:51:30 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/01/26 02:28:25 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/01/26 02:23:40 by rcorenti          #+#    #+#             */
+/*   Updated: 2022/01/26 02:27:55 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "libft.h"
 
-#include <stdlib.h>
-#include <unistd.h.h>
+char	*ft_strdup(const char *s)
+{
+	char	*ret;
+	int		i;
 
-int	ft_strlen(char *str);
-int	ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcat(char *dest, const char *src);
-void	ft_putstr_fd(char*str, int fd);
-void	ft_putendl_fd(char *str, int fd);
-void	*ft_memdel(void *ptr);
-char	*ft_strdup(const char *s);
-
-#endif
+	i = 0;
+	if (!s)
+		return (NULL);
+	ret = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!ret)
+		return (NULL);
+	while (s[i])
+	{
+		ret[i] = s[i];
+		i++;
+	}
+	ret[i] = '\0';
+	return (ret);
+}
