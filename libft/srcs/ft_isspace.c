@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/20 18:40:46 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/10 06:08:18 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/02/16 11:38:46 by rcorenti          #+#    #+#             */
+/*   Updated: 2022/02/16 11:39:34 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-void	*ft_memdel(void *ptr)
+int	ft_isspace(int c)
 {
-	if (ptr != NULL)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-	return (ptr);
+	if (c == ' ')
+		return (1);
+	return (0);
 }

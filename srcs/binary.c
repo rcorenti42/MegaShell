@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*   binary.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/20 18:40:46 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/10 06:08:18 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/02/16 11:26:41 by rcorenti          #+#    #+#             */
+/*   Updated: 2022/02/16 12:09:39 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_memdel(void *ptr)
+void    bin_exe(t_shell *shell, t_command *cmd)
 {
-	if (ptr != NULL)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-	return (ptr);
+    (void)shell;
+    (void)cmd;
 }

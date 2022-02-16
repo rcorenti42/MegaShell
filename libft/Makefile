@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/01/25 21:57:34 by rcorenti          #+#    #+#              #
-#    Updated: 2022/01/26 02:28:50 by rcorenti         ###   ########.fr        #
+#    Created: 2022/01/28 02:14:43 by rcorenti          #+#    #+#              #
+#    Updated: 2022/02/16 11:41:17 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,39 +14,39 @@ NAME = libft.a
 
 FLAGS = -Wall -Wextra -Werror
 
-DIR_S = srcs
-HEADER = includes
+HEADER = include
+
 DIR_O = ft_memdel.c \
 	ft_putendl_fd.c \
 	ft_putstr_fd.c \
 	ft_strcat.c \
 	ft_strcmp.c \
 	ft_strlen.c \
-	ft_strdup.c
+	ft_strdup.c \
+	ft_memcpy.c \
+	ft_split.c \
+	ft_strncmp.c \
+	ft_atoi.c \
+	ft_isspace.c \
 
-OBJ = $(SRC:.c=.o)
+OBJS = ${addprefix srcs/,${DIR_O:.c=.o}}
 
-SRCS = $(addprefix $(DIR_S)/, $(SRC))
-OBJS = $(addprefix $(DIR_O)/, $(OBJ))
+CC = clang
 
-all: $(NAME)
+.c.o:
+	${CC} ${FLAGS} -I ${HEADER} -c $< -o ${<:.c=.o}
 
-$(NAME): $(OBJS)
-	@ar rc $(NAME) $(OBJS)
-	@ranlib $(NAME)
+$(NAME): ${OBJS} ${HEADER}
+	ar rcs ${NAME} ${OBJS}
 
-$(DIR_O)/%.o: $(DIR_S)/%.c
-	@mkdir -p $(DIR_O)
-	@gcc $(FLAGS) -I $(HEADER) -o $a -c $<
+all:	${NAME}
 
 clean:
-	@rm -f $(OBJS)
-	@rm -rf $(DIR_O)
+	rm -f ${OBJS}
 
-fclean:
-	clean
-	@rm -f $(NAME)
+fclean: clean
+	rm -f ${NAME}
 
-re:	fclean all
+re: fclean all
 
 .PHONY: all clean fclean re

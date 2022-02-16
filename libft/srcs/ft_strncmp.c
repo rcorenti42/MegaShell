@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/20 18:40:46 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/10 06:08:18 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/01/28 00:29:26 by rcorenti          #+#    #+#             */
+/*   Updated: 2022/02/03 14:46:41 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memdel(void *ptr)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	if (ptr != NULL)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-	return (ptr);
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i] && i < n -1)
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

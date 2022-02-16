@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/20 18:40:46 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/10 06:08:18 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/01/20 17:27:34 by rcorenti          #+#    #+#             */
+/*   Updated: 2022/02/12 06:59:42 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_memdel(void *ptr)
+int	ft_pwd(void)
 {
-	if (ptr != NULL)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-	return (ptr);
+	char	*cwd;
+
+	cwd = (char *)malloc(sizeof(char) * (PATH_MAX + 5));
+	if (!cwd)
+		return (ERROR);
+	if (!getcwd(cwd, PATH_MAX))
+		return (ERROR);
+	ft_putendl_fd(cwd, STDOUT);
+	cwd = ft_memdel(cwd);
+	return (SUCCESS);
 }

@@ -5,44 +5,77 @@
 #                                                     +:+ +:+         +:+      #
 #    By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/01/26 06:37:14 by rcorenti          #+#    #+#              #
-#    Updated: 2022/01/26 07:14:51 by rcorenti         ###   ########.fr        #
+#    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
+#    Updated: 2022/02/16 15:18:32 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = clang
+INC = include
 
-FLAGS = -Wall -Wextra -Werror
-
-HEADER = include
+SRCS = main.c \
+	lexer.c \
+	lexer_utils.c \
+	list.c \
+	list2.c \
+	first_pass.c \
+	second_pass.c \
+	init_env.c \
+	expand.c \
+	expand_utils.c \
+	remove_quotes.c \
+	split_cmd.c \
+	builtins.c \
+	binary.c \
+	ft_cd.c \
+	ft_echo.c \
+	ft_env.c \
+	ft_export.c \
+	ft_pwd.c \
+	ft_unset.c \
+	ft_exit.c \
+	get_val_env.c \
+	execution.c \
+	utils.c \
+	redir.c \
 
 LIBFT = libft/libft.a
 
-srcs = main.c
+CC = clang
 
-OBJS = ${addprefix srcs/,${srcs:.c=.o}}
+CFLAGS = -g3# -Wall -Wextra -Werror
 
-.c.o :
-	${CC} ${FLAGS} -I ${HEADER} -c $< -o ${<:.c=.o}
+OBJS = ${addprefix srcs/,${SRCS:.c=.o}}
+
+.c.o:
+	$(CC) $(CFLAGS) -I $(INC) -c $< -o ${<:.c=.o}
 
 all: $(NAME)
+	@echo "  __  __                      _          _ _   ________     __  __                      _          _ _   ________    __  __                      _          _ _   ________     __  __                      _          _ _   ________   "
+	@echo " |  \/  |                    | |        | | | /  ____  \   |  \/  |                    | |        | | | /  ____  \  |  \/  |                    | |        | | | /  ____  \   |  \/  |                    | |        | | | /  ____  \  "
+	@echo " | \  / | ___  __ _  __ _ ___| |__   ___| | |/  / ___|  \  | \  / | ___  __ _  __ _ ___| |__   ___| | |/  / ___|  \ | \  / | ___  __ _  __ _ ___| |__   ___| | |/  / ___|  \  | \  / | ___  __ _  __ _ ___| |__   ___| | |/  / ___|  \ "
+	@echo " | |\/| |/ _ \/ _  |/ _  / __|  _ \ / _ \ | |  | |       | | |\/| |/ _ \/ _  |/ _  / __|  _ \ / _ \ | |  | |       || |\/| |/ _ \/ _  |/ _  / __|  _ \ / _ \ | |  | |       | | |\/| |/ _ \/ _  |/ _  / __|  _ \ / _ \ | |  | |       |"
+	@echo " | |  | |  __/ (_| | (_| \__ \ | | |  __/ | |  | |___    | | |  | |  __/ (_| | (_| \__ \ | | |  __/ | |  | |___    || |  | |  __/ (_| | (_| \__ \ | | |  __/ | |  | |___    | | |  | |  __/ (_| | (_| \__ \ | | |  __/ | |  | |___    |"
+	@echo " |_|  |_|\___|\__, |\__,_|___/_| |_|\___|_|_|\  \____|  /  |_|  |_|\___|\__, |\__,_|___/_| |_|\___|_|_|\  \____|  / |_|  |_|\___|\__, |\__,_|___/_| |_|\___|_|_|\  \____|  /  |_|  |_|\___|\__, |\__,_|___/_| |_|\___|_|_|\  \____|  / "
+	@echo "               __/ |                          \________/                 __/ |                          \________/                __/ |                          \________/                 __/ |                          \________/  "
+	@echo "              |___/                                                     |___/                                                    |___/                                                     |___/                                       "
 
-$(NAME): $(OBJS) ${LIBFT} ${HEADER}
-	${CC} ${FLAGS} ${OBJS} -lreadline -o ${NAME} ${LIBFT}
+
+$(NAME): $(OBJS) ${LIBFT} ${INC}
+	$(CC) $(CFLAGS) ${OBJS} -lreadline -o $(NAME) ${LIBFT}
 
 $(LIBFT):
 	make -C ./libft
 
 clean:
-	@rm -f $(OBJS)
-	@rm -rf $(LIBFT)
-	@make clean -C libft
+		@rm -f $(OBJS)
+		@rm -rf $(LIBFT)
+		@make clean -C libft
 
 fclean: clean
-	@rm -f $(NAME)
+		@rm -f $(NAME)
 
 re: fclean all
 
-.PNONY: all clean fclean re
+.PHONY: all clean fclean re

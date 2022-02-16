@@ -3,38 +3,131 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/24 12:28:55 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/01/26 07:11:43 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
+/*   Updated: 2022/02/16 15:49:08 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	init_shell(t_shell *shell)
+void		free_cmd(t_command *head)
 {
-	t_shell tmp;
+	t_command	*tmp;
 
-	tmp = *shell;
-	tmp.exit = 0;
-	tmp.ret = 0;
-	tmp.in = dup(STDIN);
-	tmp.out = dup(STDOUT);
+	while (head)
+	{
+		head->command = ft_memdel(head->command);
+		tmp = head;
+		head = head->next;
+		tmp = ft_memdel(tmp);
+	}	
 }
 
-int		main(int argc, char **argv, char **envp)
+static void	handler(int code)
 {
-	t_shell	shell;
+	(void)code;
+	write(1, "\n", STDOUT);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	init_shell(&shell);
+static void	quit_handler(int code)
+{
+	if (code == SIGQUIT)
+	{
+		ft_putstr_fd("Quit (core dumped)\n", 1);
+		rl_redisplay();
+	}
+	if (code == SIGINT)
+	{
+		write(1, "\n", STDOUT);
+		rl_redisplay();
+	}
+}
+
+static void	minishell(t_shell *shell, t_command *cmd)
+{
+	int			status;
+	t_command	*prev;
+
+	prev = NULL;
+	while (cmd)
+	{
+		execution(shell, prev, cmd);
+		waitpid(-1, &status, 0);
+		status = WEXITSTATUS(status);
+		if (shell->ret == 0)
+			shell->ret = status;
+		prev = cmd;
+		cmd = cmd->next;
+	}
+}
+
+static char	*ft_readline(void)
+{
+	char	*ret;
+
+	ret = NULL;
+	//signal(SIGQUIT, SIG_IGN);
+	//signal(SIGINT, &handler);
+	ret = readline(M E G A S H E L L ": \e[0m");
+	if (!ret)
+		ret = ft_strdup("exit");
+	if (ft_strcmp(ret, ""))
+		add_history(ret);
+	//signal(SIGQUIT, &quit_handler);
+	//signal(SIGINT, &quit_handler);
+	return (ret);
+}
+
+static void	print_head(t_command *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd)
+	{
+		while (cmd->command[i])
+		{
+			printf("%s\n", cmd->command[i]->str);
+			i++;
+		}
+		cmd = cmd->next;
+	}
+}
+
+int		main(int ac, char **av, char **envp)
+{
+	t_command	*head;
+	char		*input;
+	t_shell		shell;
+
+	(void)ac;
+	(void)av;
+	shell.ret = 0;
+	shell.exit = 0;
+	shell.redir.in = dup(STDIN);
+	shell.redir.out = dup(STDOUT);
+	if (init_env(&shell, envp) == ERROR)
+		return (ERROR);
 	while (!shell.exit)
 	{
-		if(!readline("$> "))
-			exit(0);
+		input = ft_readline();
+		if (ft_strcmp(input, ""))
+		{
+			head = lexer(input, shell.env);
+			input = ft_memdel(input);
+			if (head != NULL)
+			{
+				print_head(head);
+				//minishell(&shell, head);
+				free_cmd(head);
+			}
+		}	
 	}
+	free_env(shell.env);
 	return (shell.ret);
 }
