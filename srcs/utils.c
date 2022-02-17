@@ -95,7 +95,7 @@ void	free_tab(char **tab)
 	}
 }
 
-int	count_pipes(t_command *cmd)
+int	count_pipes(t_final_command *cmd)
 {
 	int	ret;
 

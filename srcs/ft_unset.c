@@ -36,7 +36,7 @@ static void	ft_delenv(t_env *env)
 	env->next = tmp;
 }
 
-void	ft_unset(t_shell *shell, t_command *cmd)
+void	ft_unset(t_shell *shell, t_final_command *cmd)
 {
 	int		i;
 	t_env	*env;

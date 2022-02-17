@@ -12,20 +12,19 @@
 
 #include "minishell.h"
 
-int	is_builtin(t_command *cmd)
+int	is_builtin(t_final_command *cmd)
 {
 	char	*str;
 
 	str = cmd->args[0];
 	if (!ft_strcmp(str, "echo") || !ft_strcmp(str, "cd")
 		|| !ft_strcmp(str, "pwd") || !ft_strcmp(str, "export")
-		|| !ft_strcmp(str, "unset") || !ft_strcmp(str, "env")
-		|| !ft_strcmp(str, "exit"))
+		|| !ft_strcmp(str, "unset") || !ft_strcmp(str, "env"))
 		return (1);
 	return (0);
 }
 
-int	builtin_exe(t_shell *shell, t_command *cmd)
+int	builtin_exe(t_shell *shell, t_final_command *cmd)
 {
 	char	*str;
 	int		ret;
@@ -44,7 +43,5 @@ int	builtin_exe(t_shell *shell, t_command *cmd)
 		ft_unset(shell, cmd);
 	if (!ft_strcmp(str, "env"))
 		ft_env(shell);
-	if (!ft_strcmp(str, "exit"))
-		ft_exit(shell, cmd);
 	return (ret);
 }

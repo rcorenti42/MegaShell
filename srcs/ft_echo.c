@@ -28,7 +28,7 @@ static int	if_valid_n(char *str)
 	return (1);
 }
 
-void	ft_echo(t_shell *shell, t_command *cmd)
+void	ft_echo(t_shell *shell, t_final_command *cmd)
 {
 	int	i;
 	int	n;

@@ -48,26 +48,6 @@ EITHER THE NUMBER OF TOKENS OR THE NUMBER OF TOKENS BEFORE
 A TOKEN OF TYPE PIPE
 */
 
-void	display_cmd(t_command *cmd)
-{
-	int	i;
-	int	j;
-
-	j = 0;
-	while (cmd)
-	{
-		i = 0;
-		printf("COMMAND %d\n", j);
-		while (cmd->command[i] != NULL)
-		{
-			display_token(cmd->command[i], 2);
-			i++;
-		}
-		j++;
-		cmd = cmd->next;
-	}
-}
-
 t_final_command	*lexer(char *str, t_env *env)
 {
 	t_token		*tk_head;

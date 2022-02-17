@@ -26,19 +26,15 @@ int	ft_charcmp(t_char *s1, const char *s2)
 	return (0);
 }
 
-int	get_token_type(t_char *str)
+enum e_type	get_token_type(t_char *str)
 {
-	if (!ft_charcmp(str, ">"))
-		return (REDIR);
-	if (!ft_charcmp(str, ">>"))
-		return (APPEND);
-	if (!ft_charcmp(str, "<"))
-		return (INPUT);
-	if (!ft_charcmp(str, "<<"))
-		return (DOC);
+	if (!ft_charcmp(str, "<") || !ft_charcmp(str, "<<")
+		|| !ft_charcmp(str, ">") || !ft_charcmp(str, ">>"))
+		return (token_operand);
 	if (str[0].c == '|')
-		return (PIPE);
-	return (CMD);
+		return (token_pipe);
+	else
+		return (token_word);
 }
 
 t_char	*treat_pipe(int *pos, t_char *token)

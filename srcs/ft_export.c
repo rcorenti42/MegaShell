@@ -81,7 +81,7 @@ static int	is_in_env(char *str, t_env *env)
 	return (i);
 }
 
-int	ft_export(t_shell *shell, t_command *cmd)
+int	ft_export(t_shell *shell, t_final_command *cmd)
 {
 	int		i;
 	int		status;

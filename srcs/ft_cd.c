@@ -20,7 +20,7 @@ static void	ft_error_cd(char *str)
 	ft_putendl_fd(strerror(errno), STDERR);
 }
 
-int	ft_cd(t_shell *shell, t_command *cmd)
+int	ft_cd(t_shell *shell, t_final_command *cmd)
 {
 	int		ret;
 	char	*str;

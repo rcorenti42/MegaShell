@@ -1,8 +1,20 @@
-#include "../include/parsing.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fill_final.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/17 04:42:28 by sobouatt          #+#    #+#             */
+/*   Updated: 2022/02/17 09:25:08 by sobouatt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 t_final_command	*ft_lstnew_final(void)
 {
-	t_final_command *new;
+	t_final_command	*new;
 
 	new = malloc(sizeof(t_final_command));
 	new->next = NULL;
@@ -24,20 +36,58 @@ void	ft_lstadd_back_final(t_final_command **command, t_final_command *new)
 	}
 }
 
-int		get_tk_nb_tmp(t_token **command)
+int	get_tk_nb_tmp(t_token **command)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (command[i] != NULL)
+	{
 		i++;
+	}
 	return (i);
+}
+
+int	get_redir_in_nb(t_token **command)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	if (!command)
+		return (i);
+	while (command[i] != NULL)
+	{
+		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, "<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
+			j++;
+		i++;
+	}
+	return (j);	
+}
+
+int	get_redir_out_nb(t_token **command)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	if (!command)
+		return (0);
+	while (command[i] != NULL)
+	{
+		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, ">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
+			j++;
+		i++;
+	}
+	return (j);	
 }
 
 char	*to_string(t_char *token)
 {
-	int i;
-	char *str;
+	int		i;
+	char	*str;
 
 	i = 0;
 	str = malloc(sizeof(char) * (char_len(token) + 1));
@@ -50,13 +100,95 @@ char	*to_string(t_char *token)
 	return (str);
 }
 
-t_final_command *lexer_fill_final(t_command *cmd_head)
+char **fill_args(t_token **command)
 {
-	t_final_command *final_head;
-	t_final_command *final_tmp;
-	t_command *cmd_tmp;
+	char **args;
+	int ac;
 	int i;
+	int j;
+	
+	ac = get_tk_nb_tmp(command) - (get_redir_in_nb(command) * 2 + get_redir_out_nb(command) * 2);
+	args = malloc(sizeof(char *) * (ac + 1));
+	i = 0;
+	j = 0;
+	while (command[i] != NULL)
+	{
+		if (command[i]->type == token_operand)
+			i ++;
+		else
+			args[j++] = to_string(command[i]->token);
+		i++;
+	}
+	args[j] = NULL;
+	return (args);
+}
 
+t_operand *fill_in(t_token **command)
+{
+	t_operand *in;
+	int ac;
+	int i;
+	int j;
+	
+	ac = get_redir_in_nb(command);
+	in = malloc(sizeof(t_operand) * (ac + 1));
+	i = 0;
+	j = 0;
+	while (command[i] != NULL)
+	{
+		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, "<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
+		{
+			if (ft_charcmp(command[i]->token, "<") == 0)
+				in[j].type = 0;
+			else
+				in[j].type = 1;
+			i++;
+			in[j].redir = to_string(command[i]->token);
+			j++;
+		}
+		else
+			i++;
+	}
+	in[j].redir = NULL;
+	return (in);
+}
+
+t_operand *fill_out(t_token **command)
+{
+	t_operand *out;
+	int ac;
+	int i;
+	int j;
+	
+	ac = get_redir_out_nb(command);
+	out = malloc(sizeof(t_operand) * (ac + 1));
+	i = 0;
+	j = 0;
+	while (command[i] != NULL)
+	{
+		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, ">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
+		{
+			if (ft_charcmp(command[i]->token, ">") == 0)
+				out[j].type = 0;
+			else
+				out[j].type = 1;
+			i++;
+			out[j].redir = to_string(command[i]->token);
+			j++;
+		}
+		else
+			i++;
+	}
+	out[j].redir = NULL;
+	return (out);
+}
+
+t_final_command	*lexer_fill_final(t_command *cmd_head)
+{
+	t_final_command	*final_head;
+	t_final_command	*final_tmp;
+	t_command		*cmd_tmp;
+	
 	cmd_tmp = cmd_head;
 	final_head = NULL;
 	while (cmd_tmp)
@@ -70,16 +202,9 @@ t_final_command *lexer_fill_final(t_command *cmd_head)
 			final_tmp = ft_lstnew_final();
 			ft_lstadd_back_final(&final_head, final_tmp);
 		}
-		i = 0;
-		while (cmd_tmp->command[i])
-		{
-			final_tmp->cmd = malloc(sizeof(char *) * (get_tk_nb_tmp(cmd_tmp->command) + 1));
-			final_tmp->cmd[i] = to_string(cmd_tmp->command[i]->token);
-			final_tmp->redir_in = NULL;
-			final_tmp->redir_out = NULL;
-			i++;
-		}
-		final_tmp->cmd[i] = NULL;
+		final_tmp->args = fill_args(cmd_tmp->command);
+		final_tmp->redir_in = fill_in(cmd_tmp->command);
+		final_tmp->redir_out = fill_out(cmd_tmp->command);
 		cmd_tmp = cmd_tmp->next;
 	}
 	return (final_head);

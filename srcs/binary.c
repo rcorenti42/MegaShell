@@ -12,7 +12,13 @@
 
 #include "minishell.h"
 
-void    bin_exe(t_shell *shell, t_command *cmd)
+static void	exec_error(char *arg)
+{
+	ft_putstr_fd(arg, STDERR);
+	ft_putendl_fd(": command not found", STDERR);
+}
+
+int    bin_exe(t_shell *shell, t_final_command *cmd)
 {
 	char	*path;
 	int	status;
@@ -25,13 +31,13 @@ void    bin_exe(t_shell *shell, t_command *cmd)
 		exec_error(cmd->args[0]);
 		return (SUCCESS);
 	}
-	shell->redir->pid = fork();
-	if (pid == -1)
+	shell->redir.pid = fork();
+	if (shell->redir.pid == -1)
 	{
 		path = ft_memdel(path);
 		return (ERROR);
 	}
-	else if (pid == 0)
+	else if (shell->redir.pid == 0)
 	{
 		if (!path)
 			path = ft_strdup(cmd->args[0]);
@@ -42,7 +48,6 @@ void    bin_exe(t_shell *shell, t_command *cmd)
 				if (ft_strcmp(path, cmd->args[0]))
 					path = ft_memdel(path);
 			}
-			return (ERROR);
 		}
 		if (path)
 			path = ft_memdel(path);
@@ -51,8 +56,8 @@ void    bin_exe(t_shell *shell, t_command *cmd)
 	{
 		if (path)
 			path = ft_memdel(path);
-		waitpid(pid, &status, 0);
-		kill(pid, SIGTERM);
+		waitpid(shell->redir.pid, &status, 0);
+		kill(shell->redir.pid, SIGTERM);
 	}
 	return (SUCCESS);
 }

@@ -19,9 +19,9 @@ static void	exec_error(char *arg)
 	ft_putendl_fd(": command not found", STDERR);
 }
 
-static void	executor(t_shell *shell, t_command *cmd)
+static void	executor(t_shell *shell, t_final_command *cmd)
 {
-	if (ft_strcmp(cmd->args, "exit") && shell->redir->pipe_nbr)
+	if (!ft_strcmp(cmd->args[0], "exit") && shell->redir.pipe_nbr == 0)
 		ft_exit(shell, cmd);
 	else if (is_builtin(cmd))
 		builtin_exe(shell, cmd);
@@ -35,15 +35,19 @@ static void	executor(t_shell *shell, t_command *cmd)
 	shell->redir.out_pipe = -1;
 }
 
-void		execution(t_shell *shell, t_command *cmd, int first)
+void		execution(t_shell *shell, t_final_command *cmd, int first)
 {
-	if (!first)
-	{
-		if (ft_pipe(shell) < 0)
-			return ;
-	}
+	int	child;
+
+	child = 0;
 	if (redir(shell, cmd) == ERROR)
 		return ;
-	else
+	if (!first)
+	{
+		child = ft_pipe(shell);
+		if (child < 0)
+			return ;
+	}
+	if (child < 2)
 		executor(shell, cmd);
 }

@@ -59,11 +59,23 @@ typedef struct s_token
 
 typedef struct s_command
 {
-	enum e_type		type;
-	char			**args;
 	struct s_token		**command;
 	struct s_command	*next;
 }				t_command;
+
+typedef struct	s_operand
+{
+	char	*redir;
+	int		type;
+}				t_operand;
+
+typedef struct	s_final_command
+{
+	char **args;
+	t_operand *redir_in;
+	t_operand *redir_out;
+	struct s_final_command *next;
+}				t_final_command;
 
 typedef struct s_env
 {
@@ -78,22 +90,24 @@ typedef struct s_redir
 	int		pipe_nbr;
 	int		in;
 	int		in_pipe;
+	int		in_fd;
 	int		out;
 	int		out_pipe;
+	int		out_fd;
 }			t_redir;
 
 typedef struct s_shell
 {
 	int		ret;
 	int		exit;
+	int		parent; 
 	t_env	*env;
 	t_redir	redir;
 }			t_shell;
 
 //lexer.c
-t_command		*lexer(char *str, t_env *env);
-int			get_token_size(char *str, int pos);
-void	display_cmd(t_command *cmd);
+t_final_command		*lexer(char *str, t_env *env);
+int				get_token_size(char *str, int pos);
 
 //lexer_utils.c
 int			skip_spaces(char *str);
@@ -108,7 +122,7 @@ t_char		*get_token(char *str, int *pos);
 
 //utils.c
 int	char_len(t_char *str);
-int	count_pipes(t_command *cmd);
+int	count_pipes(t_final_command *cmd);
 
 //list.c
 t_token		*ft_lstnew(t_char *token, enum e_type type);
@@ -140,10 +154,11 @@ char		*ft_strchr(const char *s, int c);
 t_char		*char_chr(t_char *str, int c);
 
 //EXECUTION
-void	execution(t_shell *shell, t_command *cmd, int first);
-char	*get_path(char *arg, t_env *env);
-int		redir(t_shell *shell, t_command *cmd, int type);
-void	bin_exe(t_shell *shell, t_command *cmd);
+void	execution(t_shell *shell, t_final_command *cmd, int first);
+char	*get_path(t_shell *shell, t_final_command *cmd);
+int		redir(t_shell *shell, t_final_command *cmd);
+int	bin_exe(t_shell *shell, t_final_command *cmd);
+int	ft_pipe(t_shell *shell);
 
 
 //ENV
@@ -151,22 +166,27 @@ int		init_env(t_shell *shell, char **envp);
 char	*get_val_env(char *arg, t_env *env);
 
 //BUILTINS
-void	ft_unset(t_shell *shell, t_command *cmd);
+void	ft_unset(t_shell *shell, t_final_command *cmd);
 int		ft_pwd(void);
-int		ft_export(t_shell *shell, t_command *cmd);
+int		ft_export(t_shell *shell, t_final_command *cmd);
 void	ft_env(t_shell *shell);
-void	ft_echo(t_shell *shell, t_command *cmd);
-int		ft_cd(t_shell *shell, t_command *cmd);
-void	ft_exit(t_shell *shell, t_command *cmd);
-int		is_builtin(t_command *cmd);
-int		builtin_exe(t_shell *shell, t_command *cmd);
+void	ft_echo(t_shell *shell, t_final_command *cmd);
+int		ft_cd(t_shell *shell, t_final_command *cmd);
+void	ft_exit(t_shell *shell, t_final_command *cmd);
+int		is_builtin(t_final_command *cmd);
+int		builtin_exe(t_shell *shell, t_final_command *cmd);
 
 //TOOLS
 int		ft_env_size(t_env *env);
 char	**tenv_to_tab(t_env *env);
 void	free_tab(char **tab);
 void	free_env(t_env *env);
+void    close_redir(t_shell *shell);
+void    init_std(t_shell *shell);
+void    init_redir(t_shell *shell);
+
 
 t_final_command *lexer_fill_final(t_command *cmd_head);
+
 
 #endif

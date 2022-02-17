@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sobouatt <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 08:11:52 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/16 14:02:52 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 08:02:53 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	get_tk_nb(t_token *node)
 	i = 1;
 	while (node)
 	{
-		if (node->type == PIPE)
+		if (node->type == token_pipe)
 			return (i);
 		node = node->next;
 		i++;
@@ -65,7 +65,7 @@ t_command	*lexer_split_cmd(t_token *tk_head)
 		i = 0;
 		while (tk_node)
 		{
-			if (tk_node->type == PIPE)
+			if (tk_node->type == token_pipe)
 			{
 				tk_node = tk_node->next;
 				break ;

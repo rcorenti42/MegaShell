@@ -12,20 +12,18 @@
 
 #include "minishell.h"
 
-char	*get_path(t_shell *shell, t_command *cmd)
+char	*get_path(t_shell *shell, t_final_command *cmd)
 {
 	int		i;
 	char	*path;
 	char	*bin;
-	char	*arg
+	char	*arg;
 	char	**path_split;
-	t_env	*env;
 
 	i = -1;
 	bin = NULL;
-	env = shell->env;
-	arg = cmd->command[0];
-	path = get_val_env("PATH", env);
+	arg = cmd->args[0];
+	path = get_val_env("PATH", shell->env);
 	if (!path)
 		path = ft_strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
 	if ((arg[0] != '/') && (ft_strncmp(arg, "./", 2) != 0))

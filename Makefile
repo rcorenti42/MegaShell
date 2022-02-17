@@ -6,7 +6,7 @@
 #    By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/17 08:27:13 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/17 12:01:53 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,9 +37,11 @@ SRCS = main.c \
 	ft_unset.c \
 	ft_exit.c \
 	get_val_env.c \
+	get_path.c \
 	execution.c \
 	utils.c \
 	redir.c \
+	fd.c \
 
 LIBFT = libft/libft.a
 

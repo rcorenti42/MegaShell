@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_token	*ft_lstnew(t_char *token, int type)
+t_token	*ft_lstnew(t_char *token, enum e_type type)
 {
 	t_token	*new;
 

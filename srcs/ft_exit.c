@@ -28,7 +28,7 @@ static int	ft_isnumber(char *str)
 	return (0);
 }
 
-void	ft_exit(t_shell *shell, t_command *cmd)
+void	ft_exit(t_shell *shell, t_final_command *cmd)
 {
 	ft_putendl_fd("exit", STDOUT);
 	if (cmd->args[1])
