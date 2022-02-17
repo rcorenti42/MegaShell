@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:33:13 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 14:36:26 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 05:07:09 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	is_builtin(t_command *cmd)
 {
 	char	*str;
 
-	str = cmd->command[0]->str;
+	str = cmd->args[0];
 	if (!ft_strcmp(str, "echo") || !ft_strcmp(str, "cd")
 		|| !ft_strcmp(str, "pwd") || !ft_strcmp(str, "export")
 		|| !ft_strcmp(str, "unset") || !ft_strcmp(str, "env")
@@ -31,7 +31,7 @@ int	builtin_exe(t_shell *shell, t_command *cmd)
 	int		ret;
 
 	ret = SUCCESS;
-	str = cmd->command[0]->str;
+	str = cmd->args[0];
 	if (!ft_strcmp(str, "echo"))
 		ft_echo(shell, cmd);
 	if (!ft_strcmp(str, "cd"))

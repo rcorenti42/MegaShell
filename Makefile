@@ -6,7 +6,7 @@
 #    By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/16 15:18:32 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/17 08:27:13 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRCS = main.c \
 	expand_utils.c \
 	remove_quotes.c \
 	split_cmd.c \
+	fill_final.c \
 	builtins.c \
 	binary.c \
 	ft_cd.c \

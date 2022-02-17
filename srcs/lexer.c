@@ -6,11 +6,24 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:52:10 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/16 14:48:10 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 08:27:39 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_cmd(t_command *head)
+{
+	t_command	*tmp;
+
+	while (head)
+	{
+		free(head->command);
+		tmp = head;
+		head = head->next;
+		free(tmp);
+	}	
+}
 
 int	proxy(char *str)
 {
@@ -35,12 +48,32 @@ EITHER THE NUMBER OF TOKENS OR THE NUMBER OF TOKENS BEFORE
 A TOKEN OF TYPE PIPE
 */
 
-t_command	*lexer(char *str, t_env *env)
+void	display_cmd(t_command *cmd)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	while (cmd)
+	{
+		i = 0;
+		printf("COMMAND %d\n", j);
+		while (cmd->command[i] != NULL)
+		{
+			display_token(cmd->command[i], 2);
+			i++;
+		}
+		j++;
+		cmd = cmd->next;
+	}
+}
+
+t_final_command	*lexer(char *str, t_env *env)
 {
 	t_token		*tk_head;
 	t_command	*cmd_head;
+	t_final_command *final_head;
 
-	(void)env;
 	if (proxy(str) != 0)
 	{
 		printf("quoting error o_o\n");
@@ -53,5 +86,8 @@ t_command	*lexer(char *str, t_env *env)
 	cmd_head = lexer_split_cmd(tk_head);
 	cmd_head = lexer_expand(cmd_head, env);
 	cmd_head = lexer_remove_quote(cmd_head);
-	return (cmd_head);
+	final_head = lexer_fill_final(cmd_head);
+	free_tokens(cmd_head->command[0]);
+	free_cmd(cmd_head);
+	return (final_head);
 }

@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/16 15:49:08 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 08:17:12 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,19 @@ static void	quit_handler(int code)
 
 static void	minishell(t_shell *shell, t_command *cmd)
 {
-	int			status;
-	t_command	*prev;
+	int	status;
+	int	first;
 
-	prev = NULL;
+	first = 1;
+	shell->redir.pipe_nbr = count_pipes(cmd);
 	while (cmd)
 	{
-		execution(shell, prev, cmd);
+		execution(shell, cmd, first);
 		waitpid(-1, &status, 0);
 		status = WEXITSTATUS(status);
 		if (shell->ret == 0)
 			shell->ret = status;
-		prev = cmd;
+		first = 0;
 		cmd = cmd->next;
 	}
 }
@@ -76,7 +77,7 @@ static char	*ft_readline(void)
 	ret = readline(M E G A S H E L L ": \e[0m");
 	if (!ret)
 		ret = ft_strdup("exit");
-	if (ft_strcmp(ret, ""))
+	else if (ft_strcmp(ret, ""))
 		add_history(ret);
 	//signal(SIGQUIT, &quit_handler);
 	//signal(SIGINT, &quit_handler);
@@ -90,9 +91,9 @@ static void	print_head(t_command *cmd)
 	i = 0;
 	while (cmd)
 	{
-		while (cmd->command[i])
+		while (cmd->args[i])
 		{
-			printf("%s\n", cmd->command[i]->str);
+			printf("%s\n", cmd->args[i]);
 			i++;
 		}
 		cmd = cmd->next;

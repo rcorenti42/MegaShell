@@ -89,12 +89,12 @@ int	ft_export(t_shell *shell, t_command *cmd)
 
 	i = 1;
 	env = shell->env;
-	while (cmd->command[i])
+	while (cmd->args[i])
 	{
-		status = is_in_env(cmd->command[i]->str, env);
+		status = is_in_env(cmd->args[i], env);
 		if (status == 0)
 		{
-			if (add_env(cmd->command[i]->str, env) == ERROR)
+			if (add_env(cmd->args[i], env) == ERROR)
 				return (ERROR);
 		}
 		else if (status == -1)

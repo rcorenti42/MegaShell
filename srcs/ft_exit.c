@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/05 04:45:16 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 14:46:42 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 05:06:47 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,22 @@ static int	ft_isnumber(char *str)
 void	ft_exit(t_shell *shell, t_command *cmd)
 {
 	ft_putendl_fd("exit", STDOUT);
-	if (cmd->command[1])
+	if (cmd->args[1])
 	{
-		if (ft_isnumber(cmd->command[1]->str))
+		if (ft_isnumber(cmd->args[1]))
 		{
 			ft_putstr_fd("exit: ", STDERR);
-			ft_putstr_fd(cmd->command[1]->str, STDERR);
+			ft_putstr_fd(cmd->args[1], STDERR);
 			ft_putendl_fd(": numeric argument required", STDERR);
 			shell->ret = 2;
 		}
-		else if (cmd->command[2])
+		else if (cmd->args[2])
 		{
 			ft_putendl_fd("exit: too many arguments", STDERR);
 			shell->ret = 1;
 			return ;
 		}
-		shell->ret = ft_atoi(cmd->command[1]->str);
+		shell->ret = ft_atoi(cmd->args[1]);
 	}
 	shell->exit = 1;
 }

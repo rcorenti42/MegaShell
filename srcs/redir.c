@@ -6,11 +6,16 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 15:03:35 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 08:35:38 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	ft_heredoc(t_shell *shell, t_command *cmd)
+{
+	
+}
 
 static int	ft_pipe(t_shell *shell)
 {
@@ -43,42 +48,75 @@ static int	ft_input(t_shell *shell, t_command *cmd)
 {
 	if (shell->redir.in)
 		close(shell->redir.in);
-	shell->redir.in = open(cmd->command[0]->str, O_RDONLY, S_IRWXU);
+	shell->redir.in = open(cmd->redir_in[i]->redir, O_RDONLY, S_IRWXU);
 	if (shell->redir.in == -1)
 	{
 		ft_putstr_fd("bash: ", STDERR);
-		ft_putstr_fd(cmd->command[0]->str, STDERR);
+		ft_putstr_fd(cmd->args[0], STDERR);
 		ft_putendl_fd(": No such file or directory", STDERR);
 		shell->ret = 1;
-		return (-1);
+		return (ERROR);
 	}
 	dup2(shell->redir.in, STDIN);
-	return (0);
+	return (SUCCESS);
 }
 
-int			redir(t_shell *shell, t_command *cmd, int type)
+int			redir(t_shell *shell, t_command *cmd)
 {
-	if (type == PIPE)
-		return (ft_pipe(shell));
-	else if (type == INPUT)
-		return (ft_input(shell, cmd));
-	else
+	int		i;
+
+	i = 0;
+	while (cmd->redir_in[i])
 	{
-			if (shell->redir.out > 0)
-				close(shell->redir.out);
-			if (type == REDIR)
-				shell->redir.out = open(cmd->command[0]->str, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
-			else
-				shell->redir.out = open(cmd->command[0]->str, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
-			if (shell->redir.out == -1)
-			{
-				ft_putstr_fd("bash: ", STDERR);
-				ft_putstr_fd(cmd->command[0]->str, STDERR);
-				ft_putendl_fd(": No such file or directory", STDERR);
-				shell->ret = 1;
-				return (-1);
-			}
-			dup2(shell->redir.out, STDOUT);
+		if (cmd->redir_in[i]->type == simple)
+		{
+			if (ft_input(shell, cmd) == ERROR)
+				return (ERROR);
+		}
+		else
+		{
+			if (ft_heredoc(shell, cmd) == ERROR)
+				return (ERROR);
+		}
+		i++;
 	}
-	return (0);
+	i = 0;
+	while (cmd->redir_out[i])
+	{
+		if (shell->redir.out > 0)
+			close(shell->redir.out);
+		if (cmd->redir_out[i]->type == simple)
+			shell->redir.out = open(cmd->redir_out[i]->redir, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+		else
+			shell->redir.out = open(cmd->redir_out[i]->redir, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
+		if (shell->redir.out == -1)
+		{
+			ft_putstr_fd("bash: ", STDERR);
+			ft_putstr_fd(cmd->redir_out[i]->redir, STDERR);
+			ft_putendl_fd(": No such file or directory", STDERR);
+			shell->ret = 1;
+			return (ERROR);
+		}
+		dup2(shell->redir.out, STDOUT)
+		i++;
+	}
+	return (SUCCESS);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

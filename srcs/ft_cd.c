@@ -28,7 +28,7 @@ int	ft_cd(t_shell *shell, t_command *cmd)
 
 	ret = SUCCESS;
 	env = shell->env;
-	if (!cmd->command[1])
+	if (!cmd->args[1])
 	{
 		str = get_val_env("HOME", env);
 		if (!str)
@@ -44,8 +44,8 @@ int	ft_cd(t_shell *shell, t_command *cmd)
 	}
 	else
 	{
-		if (chdir(cmd->command[0]->str) == -1)
-			ft_error_cd(cmd->command[0]->str);
+		if (chdir(cmd->args[1]) == -1)
+			ft_error_cd(cmd->args[1]);
 	}
 	return (ret);
 }

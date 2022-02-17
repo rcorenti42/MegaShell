@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 15:10:23 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 07:15:07 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,9 @@ static void	exec_error(char *arg)
 	ft_putendl_fd(": command not found", STDERR);
 }
 
-static int	if_pipe(t_command *cmd)
-{
-	while (cmd)
-	{
-		if (cmd->type == PIPE)
-			return (1);
-		cmd = cmd->next;
-	}
-	return (0);
-}
-
 static void	executor(t_shell *shell, t_command *cmd)
 {
-	if (ft_strcmp(cmd->command[0]->str, "exit") && !if_pipe(cmd))
+	if (ft_strcmp(cmd->args, "exit") && shell->redir->pipe_nbr)
 		ft_exit(shell, cmd);
 	else if (is_builtin(cmd))
 		builtin_exe(shell, cmd);
@@ -46,32 +35,15 @@ static void	executor(t_shell *shell, t_command *cmd)
 	shell->redir.out_pipe = -1;
 }
 
-void		execution(t_shell *shell ,t_command *cmd_prev, t_command *cmd)
+void		execution(t_shell *shell, t_command *cmd, int first)
 {
-	int	pipe;
-
-	pipe = 0;
-	if (cmd_prev)
+	if (!first)
 	{
-		if (cmd_prev->type == REDIR || cmd_prev->type == APPEND ||
-				cmd_prev->type == INPUT || cmd_prev->type == PIPE)
-			pipe = redir(shell, cmd, cmd_prev->type);
-			if (pipe < 0)
-				return ;
+		if (ft_pipe(shell) < 0)
+			return ;
 	}
-	if (cmd)
-	{
-		if (cmd->next)
-		{
-			if (cmd->next->next && !pipe)
-				execution(shell, cmd->next, cmd->next->next);
-		}
-	}
-	if (cmd_prev)
-	{
-		if (cmd || cmd_prev->type == PIPE)
-			executor(shell, cmd);
-	}
+	if (redir(shell, cmd) == ERROR)
+		return ;
 	else
 		executor(shell, cmd);
 }

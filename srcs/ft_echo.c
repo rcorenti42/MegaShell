@@ -35,17 +35,17 @@ void	ft_echo(t_shell *shell, t_command *cmd)
 
 	n = 0;
 	i = 1;
-	while (cmd->command[i])
+	while (cmd->args[i])
 	{
-		if (!if_valid_n(cmd->command[i]->str))
+		if (!if_valid_n(cmd->args[i]))
 			break ;
 		i++;
 		n = 1;
 	}
-	while (cmd->command[i])
+	while (cmd->args[i])
 	{
-		ft_putstr_fd(cmd->command[i]->str, 1);
-		if (cmd->command[i + 1])
+		ft_putstr_fd(cmd->args[i], 1);
+		if (cmd->args[i + 1])
 			write(1, " ", STDOUT);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 15:09:59 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 08:17:37 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@
 # define STDOUT 1
 # define STDERR 2
 
-# define EMPTY 0
-# define REDIR 1
-# define APPEND 2
-# define INPUT 3
-# define PIPE 4
-# define DOC 5
-# define CMD 6
-# define FILES 7
+enum	e_type
+{
+	token_word,
+	token_operand,
+	token_pipe,
+	simple,
+	doubles,
+};
 
 typedef struct s_char
 {
@@ -52,15 +52,15 @@ typedef struct s_char
 
 typedef struct s_token
 {
-	int			type;
-	char		*str;
+	enum e_type		type;
 	t_char			*token;
 	struct s_token		*next;
 }				t_token;
 
 typedef struct s_command
 {
-	int					type;
+	enum e_type		type;
+	char			**args;
 	struct s_token		**command;
 	struct s_command	*next;
 }				t_command;
@@ -108,9 +108,10 @@ t_char		*get_token(char *str, int *pos);
 
 //utils.c
 int	char_len(t_char *str);
+int	count_pipes(t_command *cmd);
 
 //list.c
-t_token		*ft_lstnew(t_char *token, int type);
+t_token		*ft_lstnew(t_char *token, enum e_type type);
 void		ft_lstadd_back(t_token **alst, t_token *new);
 void		ft_lstadd_front(t_token **alst, t_token *new);
 int			ft_charcmp(t_char *s1, const char *s2);
@@ -139,7 +140,7 @@ char		*ft_strchr(const char *s, int c);
 t_char		*char_chr(t_char *str, int c);
 
 //EXECUTION
-void	execution(t_shell *shell, t_command *cmd_prev, t_command *cmd);
+void	execution(t_shell *shell, t_command *cmd, int first);
 char	*get_path(char *arg, t_env *env);
 int		redir(t_shell *shell, t_command *cmd, int type);
 void	bin_exe(t_shell *shell, t_command *cmd);
@@ -165,5 +166,7 @@ int		ft_env_size(t_env *env);
 char	**tenv_to_tab(t_env *env);
 void	free_tab(char **tab);
 void	free_env(t_env *env);
+
+t_final_command *lexer_fill_final(t_command *cmd_head);
 
 #endif

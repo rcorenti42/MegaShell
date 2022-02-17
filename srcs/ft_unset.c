@@ -43,10 +43,10 @@ void	ft_unset(t_shell *shell, t_command *cmd)
 	t_env	*tmp;
 
 	i = 0;
-	while (cmd->command[++i])
+	while (cmd->args[++i])
 	{
 		env = shell->env;
-		if (if_valid_unset(cmd->command[i]->str, env->val))
+		if (if_valid_unset(cmd->args[i], env->val))
 		{
 			shell->env = shell->env->next;
 			env->val = ft_memdel(env->val);
@@ -56,7 +56,7 @@ void	ft_unset(t_shell *shell, t_command *cmd)
 		{
 			while (env && env->next)
 			{
-				if (if_valid_unset(cmd->command[i]->str, env->next->val))
+				if (if_valid_unset(cmd->args[i], env->next->val))
 					ft_delenv(env);
 				env = env->next;
 			}

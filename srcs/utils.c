@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:14:37 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 15:19:45 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/17 08:26:36 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	char_len(t_char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (i);
 	while (str[i].c != '\0')
 		i++;
 	return (i);
@@ -91,4 +93,17 @@ void	free_tab(char **tab)
 		}
 		tab = ft_memdel(tab);
 	}
+}
+
+int	count_pipes(t_command *cmd)
+{
+	int	ret;
+
+	ret = 0;
+	while (cmd)
+	{
+		ret++;
+		cmd = cmd->next;
+	}
+	return (ret - 1);
 }
