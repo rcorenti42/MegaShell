@@ -14,6 +14,7 @@
 
 static void	exec_error(char *arg)
 {
+	ft_putstr_fd("bash: ", STDERR);
 	ft_putstr_fd(arg, STDERR);
 	ft_putendl_fd(": command not found", STDERR);
 }
@@ -60,7 +61,9 @@ int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 	{
 		if (!path)
 			path = ft_strdup(cmd->args[0]);
+		ft_putendl_fd(path, STDERR);
 		execve(path, cmd->args, tenv_to_tab(env));
+		exit(0);
 	}
 	path = ft_memdel(path);
 	return (SUCCESS);

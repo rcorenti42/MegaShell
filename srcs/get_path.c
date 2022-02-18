@@ -25,7 +25,7 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 	arg = cmd->args[0];
 	path = get_val_env("PATH", shell->env);
 	if (!path)
-		path = ft_strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
+		return (bin);
 	if ((arg[0] != '/') && (ft_strncmp(arg, "./", 2) != 0))
 	{
 		path_split = ft_split(path, ':');
@@ -46,9 +46,6 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 		free_tab(path_split);
 	}
 	else
-	{
 		ft_memdel(path);
-		bin = ft_strdup(arg);
-	}
 	return (bin);
 }
