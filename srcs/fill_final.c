@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 04:42:28 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/17 09:25:08 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/18 13:24:14 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,12 @@ int	get_redir_in_nb(t_token **command)
 	while (command[i] != NULL)
 	{
 		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, "<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
+		{
 			j++;
+			if (command[i + 1] != NULL)
+				if (command[i + 1]->type != token_word)
+					return (-1);
+		}
 		i++;
 	}
 	return (j);	
@@ -78,7 +83,12 @@ int	get_redir_out_nb(t_token **command)
 	while (command[i] != NULL)
 	{
 		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, ">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
+		{
 			j++;
+			if (command[i + 1] != NULL)
+				if (command[i + 1]->type != token_word)
+					return (-1);
+		}
 		i++;
 	}
 	return (j);	
@@ -108,6 +118,7 @@ char **fill_args(t_token **command)
 	int j;
 	
 	ac = get_tk_nb_tmp(command) - (get_redir_in_nb(command) * 2 + get_redir_out_nb(command) * 2);
+	//printf("ac=%d\n", ac);
 	args = malloc(sizeof(char *) * (ac + 1));
 	i = 0;
 	j = 0;
@@ -131,6 +142,9 @@ t_operand *fill_in(t_token **command)
 	int j;
 	
 	ac = get_redir_in_nb(command);
+	if (ac < 0)
+		return (NULL);
+//	printf("in_redir = %d\n", ac);
 	in = malloc(sizeof(t_operand) * (ac + 1));
 	i = 0;
 	j = 0;
@@ -161,6 +175,9 @@ t_operand *fill_out(t_token **command)
 	int j;
 	
 	ac = get_redir_out_nb(command);
+	if (ac < 0)
+		return (NULL);
+	//printf("out_redir = %d\n", ac);
 	out = malloc(sizeof(t_operand) * (ac + 1));
 	i = 0;
 	j = 0;
@@ -169,9 +186,9 @@ t_operand *fill_out(t_token **command)
 		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, ">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
 		{
 			if (ft_charcmp(command[i]->token, ">") == 0)
-				out[j].type = 0;
+				out[j].type = simple;
 			else
-				out[j].type = 1;
+				out[j].type = doubles;
 			i++;
 			out[j].redir = to_string(command[i]->token);
 			j++;
@@ -179,6 +196,7 @@ t_operand *fill_out(t_token **command)
 		else
 			i++;
 	}
+	//printf("j=%d\n", j);
 	out[j].redir = NULL;
 	return (out);
 }

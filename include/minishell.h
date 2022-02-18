@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/17 08:17:37 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/18 15:35:53 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,10 +154,11 @@ char		*ft_strchr(const char *s, int c);
 t_char		*char_chr(t_char *str, int c);
 
 //EXECUTION
-void	execution(t_shell *shell, t_final_command *cmd, int first);
+void	execution(t_shell *shell, t_final_command *cmd);
 char	*get_path(t_shell *shell, t_final_command *cmd);
 int		redir(t_shell *shell, t_final_command *cmd);
 int	bin_exe(t_shell *shell, t_final_command *cmd);
+int	bin_exe_fork(t_shell *shell, t_final_command *cmd);
 int	ft_pipe(t_shell *shell);
 
 
@@ -184,9 +185,8 @@ void	free_env(t_env *env);
 void    close_redir(t_shell *shell);
 void    init_std(t_shell *shell);
 void    init_redir(t_shell *shell);
-
+void	free_final(t_final_command *head);
 
 t_final_command *lexer_fill_final(t_command *cmd_head);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/17 07:15:07 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/18 14:25:07 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static void	executor(t_shell *shell, t_final_command *cmd)
 		ft_exit(shell, cmd);
 	else if (is_builtin(cmd))
 		builtin_exe(shell, cmd);
+	else if (shell->parent)
+		bin_exe_fork(shell, cmd);
 	else
 		bin_exe(shell, cmd);
 	if (shell->redir.in_pipe > 0)
@@ -35,19 +37,21 @@ static void	executor(t_shell *shell, t_final_command *cmd)
 	shell->redir.out_pipe = -1;
 }
 
-void		execution(t_shell *shell, t_final_command *cmd, int first)
+void		execution(t_shell *shell, t_final_command *cmd)
 {
 	int	child;
 
 	child = 0;
-	if (redir(shell, cmd) == ERROR)
-		return ;
-	if (!first)
+	if (cmd->next)
 	{
 		child = ft_pipe(shell);
 		if (child < 0)
 			return ;
 	}
-	if (child < 2)
-		executor(shell, cmd);
+	if (redir(shell, cmd) == ERROR)
+		return ;
+	if (child == 1)
+		execution(shell, cmd->next);
+	else
+		executor(shell, cmd); 
 }

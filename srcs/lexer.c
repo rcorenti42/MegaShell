@@ -32,8 +32,10 @@ int	proxy(char *str)
 
 	i = 0;
 	quote = 0;
+	int last;
 	if (str == NULL)
 		return (0);
+	last = 0;
 	while (str[i])
 	{
 		quote = treat_quote(str[i], quote);
@@ -47,6 +49,32 @@ METHOD FOR LEXER_SPLIT_CMD : TAKE A TK_NODE AND RETURN
 EITHER THE NUMBER OF TOKENS OR THE NUMBER OF TOKENS BEFORE 
 A TOKEN OF TYPE PIPE
 */
+
+t_final_command *detect_errors(t_final_command *param)
+{
+	t_final_command *ptr = param;
+	int error;
+
+	while (ptr != NULL)
+	{
+		error = 0;
+		if (ptr->redir_in == NULL || ptr->redir_out == NULL
+			|| ptr->args == NULL)
+			error = 1;
+		if (error == 0)
+			if (ptr->args[0] == NULL)
+				error = 1;
+		if (error != 0)
+		{
+			free_final(param);
+			printf("Syntax Error\n");
+			return (NULL);
+		}
+		ptr = ptr->next;
+	}
+
+	return (param);
+}
 
 t_final_command	*lexer(char *str, t_env *env)
 {
@@ -64,10 +92,16 @@ t_final_command	*lexer(char *str, t_env *env)
 		return (NULL);
 	tk_head = lexer_second_pass(tk_head);
 	cmd_head = lexer_split_cmd(tk_head);
+	//printf("After split_cmd\n");
+	//display_cmd(cmd_head);
 	cmd_head = lexer_expand(cmd_head, env);
+	//printf("After lexer_expand\n");
+	//display_cmd(cmd_head);
 	cmd_head = lexer_remove_quote(cmd_head);
+	//printf("After lexer_expand\n");
+	//display_cmd(cmd_head);
 	final_head = lexer_fill_final(cmd_head);
 	free_tokens(cmd_head->command[0]);
 	free_cmd(cmd_head);
-	return (final_head);
+	return (detect_errors(final_head));
 }

@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/17 09:05:41 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/18 14:25:21 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,27 @@ void	free_final(t_final_command *head)
 	tmp = head;
 	while (head)
 	{
+		i = 0;
 		tmp = head;
-		while (head->args[i] != NULL)
-			free(head->args[i++]);
+		if (head->args != NULL)
+			while (head->args[i] != NULL)
+				free(head->args[i++]);
+		i = 0;
+		if (head->redir_in != NULL)
+			while (head->redir_in[i].redir != NULL)
+				free(head->redir_in[i++].redir);
+		i = 0;
+		if (head->redir_out != NULL)
+			while (head->redir_out[i].redir != NULL)
+				free(head->redir_out[i++].redir);
+		free(head->redir_in);
+		free(head->redir_out);
 		free(head->args);
 		head = head->next;
 		free(tmp);
 	}
 }
+
 static void	handler(int code)
 {
 	(void)code;
@@ -55,25 +68,22 @@ static void	quit_handler(int code)
 static void	minishell(t_shell *shell, t_final_command *cmd)
 {
 	int	status;
-	int	first;
 
-	first = 1;
+	status = 0;
 	shell->redir.pipe_nbr = count_pipes(cmd);
-	while (cmd)
+	shell->parent = 1;
+	execution(shell, cmd);
+	close_redir(shell);
+	init_redir(shell);
+	init_std(shell);
+	waitpid(-1, &status, 0);
+	if (shell->parent == 0)
+		exit(shell->ret);
+	if (WIFEXITED(status) != 0)
 	{
-		shell->parent = 1;
-		execution(shell, cmd, first);
-		close_redir(shell);
-		init_redir(shell);
-		init_std(shell);
-		waitpid(-1, &status, 0);
 		status = WEXITSTATUS(status);
 		if (shell->ret == 0)
 			shell->ret = status;
-		if (shell->parent == 0)
-			exit(shell->ret);
-		first = 0;
-		cmd = cmd->next;
 	}
 }
 
@@ -84,7 +94,15 @@ static char	*ft_readline(void)
 	ret = NULL;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handler);
-	ret = readline(M E G A S H E L L ": \e[0m");
+
+
+	ret = readline("Megashell: ");
+
+
+	//ret = readline(M E G A S H E L L ": \e[0m");
+
+
+
 	if (!ret)
 		ret = ft_strdup("exit");
 	else if (ft_strcmp(ret, ""))
@@ -115,13 +133,13 @@ int		main(int ac, char **av, char **envp)
 		if (ft_strcmp(input, ""))
 		{
 			head = lexer(input, shell.env);
-			input = ft_memdel(input);
 			if (head != NULL)
 			{
 				minishell(&shell, head);
 				free_final(head);
 			}
-		}	
+		}
+		input = ft_memdel(input);
 	}
 	free_env(shell.env);
 	return (shell.ret);

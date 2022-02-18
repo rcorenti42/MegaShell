@@ -18,7 +18,26 @@ static void	exec_error(char *arg)
 	ft_putendl_fd(": command not found", STDERR);
 }
 
-int    bin_exe(t_shell *shell, t_final_command *cmd)
+int		bin_exe(t_shell *shell, t_final_command *cmd)
+{
+	char	*path;
+	t_env	*env;
+
+	env = shell->env;
+	path = get_path(shell, cmd);
+	if (!path)
+	{
+		exec_error(cmd->args[0]);
+		return (SUCCESS);
+	}
+	if (!path)
+		path = ft_strdup(cmd->args[0]);
+	execve(path, cmd->args, tenv_to_tab(env));
+	path = ft_memdel(path);
+	return (SUCCESS);
+}
+
+int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 {
 	char	*path;
 	int	status;
@@ -41,23 +60,8 @@ int    bin_exe(t_shell *shell, t_final_command *cmd)
 	{
 		if (!path)
 			path = ft_strdup(cmd->args[0]);
-		if (execve(path, cmd->args, tenv_to_tab(env)))
-		{
-			if (path)
-			{
-				if (ft_strcmp(path, cmd->args[0]))
-					path = ft_memdel(path);
-			}
-		}
-		if (path)
-			path = ft_memdel(path);
+		execve(path, cmd->args, tenv_to_tab(env));
 	}
-	else
-	{
-		if (path)
-			path = ft_memdel(path);
-		waitpid(shell->redir.pid, &status, 0);
-		kill(shell->redir.pid, SIGTERM);
-	}
+	path = ft_memdel(path);
 	return (SUCCESS);
 }

@@ -45,6 +45,26 @@ t_char	*treat_pipe(int *pos, t_char *token)
 	return (token);
 }
 
+t_char *cut_operand(char *str, int *pos, t_char *token)
+{
+	int i;
+
+	i = 0;
+	//printf("Cut_operand\n");
+	//printf("Sallut %s\n", str);
+	token[i++].c = str[(*pos)++];
+	//printf("%s\n", str + *pos);
+	//printf("%d\n", *pos);
+	if (ft_strncmp(str + *pos, "<<", 2) == 0 || ft_strncmp(str + *pos, ">>", 2) == 0)
+	{
+		token[i++].c = str[(*pos)++];
+	}
+	token[i].c = '\0';
+//	printf("%c", token[0].c);
+//	printf("%c\n", token[1].c);
+	return (token);
+}
+
 t_char	*get_token(char *str, int *pos)
 {
 	int		i;
@@ -53,21 +73,29 @@ t_char	*get_token(char *str, int *pos)
 
 	*pos += skip_spaces(str + *pos);
 	quote = get_token_size(str, *pos);
+	//printf("%s\n", str + *pos);
+	//printf("quote=%d\n", quote);
 	if (quote == 0)
 		return (NULL);
 	token = malloc(sizeof(t_char) * (quote + 1));
 	quote = 0;
 	i = 0;
+	if (str[*pos] == '<' || str[*pos] == '>')
+	{
+		token[i++].c = str[(*pos)++];
+		if ((str[*pos] == '<' || str[*pos] == '>'))
+			token[i++].c = str[(*pos)++];
+		token[i].c = '\0';
+		return (token);
+	}
 	if (str[*pos] == '|')
 		return (treat_pipe(pos, token));
 	while (str[*pos])
 	{
 		quote = treat_quote(str[*pos], quote);
-		if ((str[*pos] == ' ' || str[*pos] == '|') && quote == 0)
+		if ((str[*pos] == ' ' || str[*pos] == '|' || str[*pos] == '<' || str[*pos] == '>') && quote == 0)
 			break ;
-		token[i].c = str[(*pos)];
-		i++;
-		(*pos)++;
+		token[i++].c = str[(*pos)++];
 	}
 	token[i].c = '\0';
 	return (token);
@@ -77,7 +105,7 @@ t_token	*lexer_first_pass(char *str)
 {
 	int				pos;
 	t_char			*token;
-	int				type;
+	enum e_type		type;
 	t_token			*head;
 	t_token			*node;
 
@@ -88,6 +116,8 @@ t_token	*lexer_first_pass(char *str)
 	while (pos < ft_strlen(str))
 	{
 		token = get_token(str, &pos);
+	//	put_tchar(token);
+	//	printf("\n");
 		if (token == NULL)
 			break ;
 		type = get_token_type(token);

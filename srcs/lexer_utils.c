@@ -61,11 +61,18 @@ int	get_token_size(char *str, int pos)
 
 	token_size = pos;
 	quote = 0;
-	if (str[pos] == '|')
+	if ((ft_strncmp(str + pos, ">>", 2) == 0) || ft_strncmp(str + pos, "<<", 2) == 0)
+	{
+	//	printf("strncmp in gts\n");
+		return (2);
+	}
+	if (str[pos] == '|' || str[pos] == '<' || str[pos] == '>')
 		return (1);
 	while (str[pos] != '\0')
 	{
 		quote = treat_quote(str[pos], quote);
+		if ((str[pos] == '<' || str[pos] == '>') && quote == 0)
+			return (pos - token_size);
 		if ((str[pos] == ' ' || str[pos] == '|') && quote == 0)
 			return (pos - token_size);
 		pos++;

@@ -44,14 +44,15 @@ t_char	*remove_quote(t_char *token)
 	j = 0;
 	while (token[i].c != '\0')
 	{
-		if ((token[i].c != '"' || token[i].c != '\'')
-			&& token[i].inhib != 'x')
+		if ((token[i].c == '"' || token[i].c == '\'') && token[i].inhib == 'x')
+			i++;
+		else
 		{
 			new[j].c = token[i].c;
 			new[j].inhib = token[i].inhib;
+			i++;
 			j++;
 		}
-		i++;
 	}
 	new[j].c = '\0';
 	free(token);
