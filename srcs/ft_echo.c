@@ -17,7 +17,7 @@ static int	if_valid_n(char *str)
 	int	i;
 
 	i = 1;
-	if (str[0] != '-')
+	if (str[0] != '-' || str[1] != 'n')
 		return (0);
 	while (str[i])
 	{
