@@ -97,11 +97,23 @@ char	*get_var(t_char *word)
 
 	str = malloc(sizeof(char) * ((get_expand_size(word) + 1)));
 	i = 1;
+	while (word[i].c != '\0' && isdigit(word[i].c))
+	{
+		str[i - 1] = word[i].c;
+		i++;
+	}
+	if (i != 1)
+	{
+		str[i - 1] = '=';
+		str[i] = '\0';
+		return (str);
+	}
 	while (word[i].c != '\0')
 	{
 		if (word[i].c == '\"' || word[i].c == ' ' || word[i].c == '\''
 			|| word[i].c == '$' || word[i].c == '+' || word[i].c == '-'
-			|| word[i].c == '=' || word[i].c == '/' || word[i].c == '%')
+			|| word[i].c == '=' || word[i].c == '/' || word[i].c == '%'
+			|| word[i].c == '_')
 			break ;
 		str[i - 1] = word[i].c;
 		i++;

@@ -59,11 +59,10 @@ int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 	}
 	else if (shell->redir.pid == 0)
 	{
+		shell->parent = 0;
 		if (!path)
 			path = ft_strdup(cmd->args[0]);
-		ft_putendl_fd(path, STDERR);
 		execve(path, cmd->args, tenv_to_tab(env));
-		exit(0);
 	}
 	path = ft_memdel(path);
 	return (SUCCESS);

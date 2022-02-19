@@ -64,7 +64,6 @@ t_char *cut_operand(char *str, int *pos, t_char *token)
 //	printf("%c\n", token[1].c);
 	return (token);
 }
-
 t_char	*get_token(char *str, int *pos)
 {
 	int		i;
@@ -83,7 +82,7 @@ t_char	*get_token(char *str, int *pos)
 	if (str[*pos] == '<' || str[*pos] == '>')
 	{
 		token[i++].c = str[(*pos)++];
-		if ((str[*pos] == '<' || str[*pos] == '>'))
+		if ((str[*pos] == '<' && str[*pos - 1] == '<') || (str[*pos] == '>' && str[*pos - 1] == '>'))
 			token[i++].c = str[(*pos)++];
 		token[i].c = '\0';
 		return (token);

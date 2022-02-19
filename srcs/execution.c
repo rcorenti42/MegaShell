@@ -29,12 +29,6 @@ static void	executor(t_shell *shell, t_final_command *cmd)
 		bin_exe_fork(shell, cmd);
 	else
 		bin_exe(shell, cmd);
-	if (shell->redir.in_pipe > 0)
-		close(shell->redir.in_pipe);
-	if (shell->redir.out_pipe > 0)
-		close(shell->redir.out_pipe);
-	shell->redir.in_pipe = -1;
-	shell->redir.out_pipe = -1;
 }
 
 void		execution(t_shell *shell, t_final_command *cmd)
@@ -44,14 +38,20 @@ void		execution(t_shell *shell, t_final_command *cmd)
 	child = 0;
 	if (cmd->next)
 	{
+		if (shell->redir.in_pipe > 0)
+			close(shell->redir.in_pipe);
+		if (shell->redir.out_pipe > 0)
+			close(shell->redir.out_pipe);
+		shell->redir.in_pipe = -1;
+		shell->redir.out_pipe = -1;
 		child = ft_pipe(shell);
 		if (child < 0)
 			return ;
 	}
 	if (redir(shell, cmd) == ERROR)
 		return ;
-	if (child == 1)
+	if (child == 2)
 		execution(shell, cmd->next);
 	else
-		executor(shell, cmd); 
+		executor(shell, cmd);
 }

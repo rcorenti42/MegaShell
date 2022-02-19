@@ -59,12 +59,18 @@ int	get_redir_in_nb(t_token **command)
 		return (i);
 	while (command[i] != NULL)
 	{
-		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, "<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
+		if (command[i]->type == token_operand 
+			&& (ft_charcmp(command[i]->token, "<") == 0 
+				|| ft_charcmp(command[i]->token, "<<") == 0))
 		{
 			j++;
 			if (command[i + 1] != NULL)
+			{
 				if (command[i + 1]->type != token_word)
 					return (-1);
+			}
+			else
+				return (-1);
 		}
 		i++;
 	}
@@ -82,12 +88,18 @@ int	get_redir_out_nb(t_token **command)
 		return (0);
 	while (command[i] != NULL)
 	{
-		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, ">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
+		if (command[i]->type == token_operand 
+			&& (ft_charcmp(command[i]->token, ">") == 0 
+				|| ft_charcmp(command[i]->token, ">>") == 0))
 		{
 			j++;
 			if (command[i + 1] != NULL)
+			{
 				if (command[i + 1]->type != token_word)
 					return (-1);
+			}
+			else
+				return (-1);
 		}
 		i++;
 	}
@@ -153,9 +165,9 @@ t_operand *fill_in(t_token **command)
 		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, "<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
 		{
 			if (ft_charcmp(command[i]->token, "<") == 0)
-				in[j].type = 0;
+				in[j].type = simple;
 			else
-				in[j].type = 1;
+				in[j].type = doubles;
 			i++;
 			in[j].redir = to_string(command[i]->token);
 			j++;
@@ -220,9 +232,12 @@ t_final_command	*lexer_fill_final(t_command *cmd_head)
 			final_tmp = ft_lstnew_final();
 			ft_lstadd_back_final(&final_head, final_tmp);
 		}
-		final_tmp->args = fill_args(cmd_tmp->command);
-		final_tmp->redir_in = fill_in(cmd_tmp->command);
 		final_tmp->redir_out = fill_out(cmd_tmp->command);
+		final_tmp->redir_in = fill_in(cmd_tmp->command);
+		if (final_tmp->redir_in != NULL && final_tmp->redir_out != NULL) 
+			final_tmp->args = fill_args(cmd_tmp->command);
+		else
+			final_tmp->args = NULL;
 		cmd_tmp = cmd_tmp->next;
 	}
 	return (final_head);

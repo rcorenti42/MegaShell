@@ -12,8 +12,28 @@
 
 #include "minishell.h"
 
-static int	ft_heredoc(t_shell *shell, t_final_command *cmd)
+static int	ft_heredoc(t_shell *shell, t_final_command *cmd, char *str)
 {
+	char	*line;
+	int		fd[2];
+	int		tmp;
+
+	if (pipe(fd))
+		return (ERROR);
+	while (1)
+	{
+		line = readline("> ");
+		if (!ft_strcmp(line, str))
+			break;
+		ft_putendl_fd(line, fd[1]);
+		line = ft_memdel(line);
+	}
+	line = ft_memdel(line);
+	dup2(fd[0], STDIN);
+	if (fd[0] > 0)
+		close(fd[0]);
+	if (fd[1] > 0)
+		close(fd[1]);
 	return (SUCCESS);
 }
 
@@ -22,24 +42,27 @@ int	ft_pipe(t_shell *shell)
 	pid_t	pid;
 	int		fd[2];
 
-	pipe(fd);
+	if (pipe(fd))
+		return (-1);
 	pid = fork();
-	if (pid == 0)
+	if (pid == -1)
+		return (-1);
+	else if (pid == 0)
 	{
-		if (fd[1] > 0)
-			close(fd[1]);
-		dup2(fd[0], STDIN);
-		shell->redir.in_pipe = fd[0];
+		if (fd[0] > 0)
+			close(fd[0]);
+		dup2(fd[1], STDOUT);
+		shell->redir.out_pipe = fd[1];
 		shell->redir.pid = -1;
 		shell->parent = 0;
 		return (1);
 	}
 	else
 	{
-		if (fd[0] > 0)
-			close(fd[0]);
-		dup2(fd[1], STDOUT);
-		shell->redir.out_pipe = fd[1];
+		if (fd[1] > 0)
+			close(fd[1]);
+		dup2(fd[0], STDIN);
+		shell->redir.in_pipe = fd[0];
 		shell->redir.pid = pid;
 		return (2);
 	}
@@ -47,7 +70,7 @@ int	ft_pipe(t_shell *shell)
 
 static int	ft_input(t_shell *shell, t_final_command *cmd, char *str)
 {
-	if (shell->redir.in_fd)
+	if (shell->redir.in_fd > 0)
 		close(shell->redir.in_fd);
 	shell->redir.in_fd = open(str, O_RDONLY, S_IRWXU);
 	if (shell->redir.in_fd == -1)
@@ -76,7 +99,7 @@ int			redir(t_shell *shell, t_final_command *cmd)
 		}
 		else
 		{
-			if (ft_heredoc(shell, cmd) == ERROR)
+			if (ft_heredoc(shell, cmd, cmd->redir_in[i].redir) == ERROR)
 				return (ERROR);
 		}
 		i++;

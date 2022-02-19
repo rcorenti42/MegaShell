@@ -29,15 +29,17 @@ int	proxy(char *str)
 {
 	int	i;
 	int	quote;
+	int last;
 
 	i = 0;
 	quote = 0;
-	int last;
 	if (str == NULL)
 		return (0);
 	last = 0;
 	while (str[i])
 	{
+		if ((str[i] == '"' || str[i] == '\'') && quote == 0)
+			last = i;
 		quote = treat_quote(str[i], quote);
 		i++;
 	}
@@ -76,6 +78,27 @@ t_final_command *detect_errors(t_final_command *param)
 	return (param);
 }
 
+char	proxy2(char *str)
+{
+	int i;
+	char last;
+	int quote;
+
+	i = 0;
+	quote = 0;
+	while (str[i])
+	{
+		if ((str[i] == '\'' || str[i] == '"') && quote == 0)
+			last = str[i];
+		quote = treat_quote(str[i], quote);
+		i++;
+	}
+	if (quote != 0)
+		return (last);
+	else
+		return ('x');
+}
+
 t_final_command	*lexer(char *str, t_env *env)
 {
 	t_token		*tk_head;
@@ -84,7 +107,7 @@ t_final_command	*lexer(char *str, t_env *env)
 
 	if (proxy(str) != 0)
 	{
-		printf("quoting error o_o\n");
+		printf("minishell: syntax error near unexpected token '%c'\n", proxy2(str));
 		return (NULL);
 	}
 	tk_head = lexer_first_pass(str);
@@ -92,14 +115,8 @@ t_final_command	*lexer(char *str, t_env *env)
 		return (NULL);
 	tk_head = lexer_second_pass(tk_head);
 	cmd_head = lexer_split_cmd(tk_head);
-	//printf("After split_cmd\n");
-	//display_cmd(cmd_head);
 	cmd_head = lexer_expand(cmd_head, env);
-	//printf("After lexer_expand\n");
-	//display_cmd(cmd_head);
 	cmd_head = lexer_remove_quote(cmd_head);
-	//printf("After lexer_expand\n");
-	//display_cmd(cmd_head);
 	final_head = lexer_fill_final(cmd_head);
 	free_tokens(cmd_head->command[0]);
 	free_cmd(cmd_head);

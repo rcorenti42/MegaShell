@@ -73,16 +73,26 @@ static void	minishell(t_shell *shell, t_final_command *cmd)
 	shell->redir.pipe_nbr = count_pipes(cmd);
 	shell->parent = 1;
 	execution(shell, cmd);
+	if (shell->parent)
+		waitpid(shell->redir.pid, &status, 0);
+	init_std(shell);
 	close_redir(shell);
 	init_redir(shell);
-	init_std(shell);
-	waitpid(-1, &status, 0);
-	if (shell->parent == 0)
+	if (!shell->parent)
+	{
+		ft_putendl_fd("test", STDERR);
+		close(STDIN);
+		close(STDOUT);
+		if (shell->redir.in > 0)
+			close(shell->redir.in);
+		if (shell->redir.out > 0)
+			close(shell->redir.out);
 		exit(shell->ret);
-	if (WIFEXITED(status) != 0)
+	}
+	if (WIFEXITED(status))
 	{
 		status = WEXITSTATUS(status);
-		if (shell->ret == 0)
+		if (!shell->ret)
 			shell->ret = status;
 	}
 }
@@ -94,7 +104,6 @@ static char	*ft_readline(void)
 	ret = NULL;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handler);
-
 
 	ret = readline("Megashell: ");
 
@@ -122,8 +131,8 @@ int		main(int ac, char **av, char **envp)
 	(void)av;
 	shell.ret = 0;
 	shell.exit = 0;
-	shell.redir.in = dup(STDOUT);
-	shell.redir.out = dup(STDIN);
+	shell.redir.in = dup(STDIN);
+	shell.redir.out = dup(STDOUT);
 	init_redir(&shell);
 	if (init_env(&shell, envp) == ERROR)
 		return (ERROR);
@@ -132,7 +141,10 @@ int		main(int ac, char **av, char **envp)
 		input = ft_readline();
 		if (ft_strcmp(input, ""))
 		{
+			shell.env->ret = shell.ret;
 			head = lexer(input, shell.env);
+			shell.ret = shell.env->ret;
+
 			if (head != NULL)
 			{
 				minishell(&shell, head);
@@ -142,5 +154,11 @@ int		main(int ac, char **av, char **envp)
 		input = ft_memdel(input);
 	}
 	free_env(shell.env);
+	close(STDIN);
+	close(STDOUT);
+	if (shell.redir.in > 0)
+		close(shell.redir.in);
+	if (shell.redir.out > 0)
+		close(shell.redir.out);
 	return (shell.ret);
 }

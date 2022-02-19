@@ -29,7 +29,6 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 	if ((arg[0] != '/') && (ft_strncmp(arg, "./", 2) != 0))
 	{
 		path_split = ft_split(path, ':');
-		ft_memdel(path);
 		while (path_split[++i])
 		{
 			bin = (char *)calloc(sizeof(char), (ft_strlen(path_split[i])
@@ -46,6 +45,9 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 		free_tab(path_split);
 	}
 	else
-		ft_memdel(path);
+	{
+		bin = ft_strdup(arg);
+	}
+	path = ft_memdel(path);
 	return (bin);
 }

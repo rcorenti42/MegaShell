@@ -80,6 +80,7 @@ typedef struct	s_final_command
 typedef struct s_env
 {
 	char			*val;
+	int				ret;
 	struct s_env		*next;
 }				t_env;
 

@@ -57,6 +57,12 @@ t_command	*lexer_split_cmd(t_token *tk_head)
 	int			i;
 
 	init_things(&tk_node, &cmd_head, &cmd_node, &tk_head);
+	if (!tk_node)
+	{
+		cmd_head = ft_lstnew_cmd();
+		cmd_head->command[0] = NULL;
+		return (cmd_head);
+	}
 	while (tk_node)
 	{
 		prepare_node(&cmd_head, &cmd_node);
