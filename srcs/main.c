@@ -145,6 +145,7 @@ int		main(int ac, char **av, char **envp)
 	shell.redir.in = dup(STDIN);
 	shell.redir.out = dup(STDOUT);
 	shell.redir.i_pipe = -1;
+	shell.redir.pipe_nbr = 0;
 	init_redir(&shell);
 	if (init_env(&shell, envp) == ERROR)
 		return (ERROR);

@@ -75,6 +75,8 @@ char	**ft_split(const char *s, char c)
 
 	count = ft_count_sep(s, c);
 	tab = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!tab)
+		return (NULL);
 	tab[count] = NULL;
 	tab = ft_spliting(tab, s, c);
 	return (tab);

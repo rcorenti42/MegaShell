@@ -44,7 +44,9 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 		}
 		if (!bin)
 		{
+			free_tab(path_split);
 			bin = ft_strdup("");
+			path = ft_memdel(path);
 			return (bin);
 		}
 		free_tab(path_split);

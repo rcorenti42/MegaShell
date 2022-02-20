@@ -12,18 +12,11 @@
 
 #include "minishell.h"
 
-static void	exec_error(char *arg)
-{
-	ft_putstr_fd("megashell: ", STDERR);
-	ft_putstr_fd(arg, STDERR);
-	ft_putendl_fd(": command not found", STDERR);
-}
-
 static void	executor(t_shell *shell, t_final_command *cmd)
 {
 	if (!ft_strcmp(cmd->args[0], "exit") && shell->redir.pipe_nbr == 0)
 		ft_exit(shell, cmd);
-	if (!cmd->args[0])
+	else if (!cmd->args[0])
 		return ;
 	else if (is_builtin(cmd))
 		builtin_exe(shell, cmd);

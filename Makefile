@@ -14,19 +14,30 @@ NAME = minishell
 
 INC = include
 
-SRCS = main.c \
-	lexer.c \
+SRCS = srcs
+
+PARS = parser
+
+EXEC = execution
+
+SRCS1 = main.c \
+	utils.c \
+
+SRCS2 = lexer.c \
 	lexer_utils.c \
 	list.c \
 	list2.c \
 	first_pass.c \
 	second_pass.c \
-	init_env.c \
 	expand.c \
 	expand_utils.c \
 	remove_quotes.c \
 	split_cmd.c \
 	fill_final.c \
+
+SRCS3 = redir.c \
+	fd.c \
+	init_env.c \
 	builtins.c \
 	binary.c \
 	ft_cd.c \
@@ -39,9 +50,10 @@ SRCS = main.c \
 	get_val_env.c \
 	get_path.c \
 	execution.c \
-	utils.c \
-	redir.c \
-	fd.c \
+
+PARS = ${addsuffix /parser,${SRCS}}
+
+EXEC = ${addsuffix /execution,${SRCS}}
 
 LIBFT = libft/libft.a
 
@@ -49,7 +61,7 @@ CC = clang
 
 CFLAGS = -g3# -Wall -Wextra -Werror
 
-OBJS = ${addprefix srcs/,${SRCS:.c=.o}}
+OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
 
 .c.o:
 	$(CC) $(CFLAGS) -I $(INC) -c $< -o ${<:.c=.o}
