@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:52:10 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/17 08:27:39 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/20 06:38:52 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_final_command *detect_errors(t_final_command *param)
 		if (error != 0)
 		{
 			free_final(param);
-			printf("Syntax Error\n");
+			write(2, "megashell: syntax error\n", ft_strlen("megashell: syntax error\n"));
 			return (NULL);
 		}
 		ptr = ptr->next;
@@ -101,18 +101,14 @@ t_final_command	*lexer(char *str, t_env *env)
 	t_token		*tk_head;
 	t_command	*cmd_head;
 	t_final_command *final_head;
+
 	char			c;
 	if (proxy(str) != 0)
 	{
-		write(2, "minishell: syntax error near unexpected token '",
-			ft_strlen("minishell: syntax error near unexpected token '"));
-		c = proxy2(str);
-		write(2, &c, 1);
-		write(2, "'\n", 2);
-		
+		display_syntax_error(env);
 		return (NULL);
 	}
-	tk_head = lexer_first_pass(str);
+	tk_head = lexer_first_pass(str, env);
 	if (tk_head == NULL)
 		return (NULL);
 	tk_head = lexer_second_pass(tk_head);

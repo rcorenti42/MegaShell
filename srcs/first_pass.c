@@ -50,20 +50,13 @@ t_char *cut_operand(char *str, int *pos, t_char *token)
 	int i;
 
 	i = 0;
-	//printf("Cut_operand\n");
-	//printf("Sallut %s\n", str);
 	token[i++].c = str[(*pos)++];
-	//printf("%s\n", str + *pos);
-	//printf("%d\n", *pos);
 	if (ft_strncmp(str + *pos, "<<", 2) == 0 || ft_strncmp(str + *pos, ">>", 2) == 0)
-	{
 		token[i++].c = str[(*pos)++];
-	}
 	token[i].c = '\0';
-//	printf("%c", token[0].c);
-//	printf("%c\n", token[1].c);
 	return (token);
 }
+
 t_char	*get_token(char *str, int *pos)
 {
 	int		i;
@@ -72,8 +65,6 @@ t_char	*get_token(char *str, int *pos)
 
 	*pos += skip_spaces(str + *pos);
 	quote = get_token_size(str, *pos);
-	//printf("%s\n", str + *pos);
-	//printf("quote=%d\n", quote);
 	if (quote == 0)
 		return (NULL);
 	token = malloc(sizeof(t_char) * (quote + 1));
@@ -100,7 +91,31 @@ t_char	*get_token(char *str, int *pos)
 	return (token);
 }
 
-t_token	*lexer_first_pass(char *str)
+int	pipe_proxy(t_token *head)
+{
+	t_token	*tmp;
+	t_token	*node;
+
+	tmp = NULL;
+	node = head;
+	if (node->type == token_pipe)
+		return (1);
+	while (node)
+	{
+		if (tmp != NULL)
+		{
+			if (tmp->type == token_pipe && node->type == token_pipe)
+				return (1);
+		}
+		tmp = node;
+		node = node->next;
+	}
+	if (tmp->type == token_pipe)
+		return (1);
+	return (0);
+}
+
+t_token	*lexer_first_pass(char *str, t_env *env)
 {
 	int				pos;
 	t_char			*token;
@@ -115,8 +130,6 @@ t_token	*lexer_first_pass(char *str)
 	while (pos < ft_strlen(str))
 	{
 		token = get_token(str, &pos);
-	//	put_tchar(token);
-	//	printf("\n");
 		if (token == NULL)
 			break ;
 		type = get_token_type(token);
@@ -127,6 +140,15 @@ t_token	*lexer_first_pass(char *str)
 			node = ft_lstnew(token, type);
 			ft_lstadd_back(&head, node);
 		}
+	}
+	if (head == NULL)
+		return (NULL);
+	if (pipe_proxy(head))
+	{
+		write(2, "megashell: syntax error\n",
+			ft_strlen("megashell: syntax error\n"));
+		free_tokens(head);
+		head = NULL;
 	}
 	return (head);
 }

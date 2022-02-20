@@ -21,6 +21,18 @@ void    init_redir(t_shell *shell)
     shell->redir.pid = -1;
 }
 
+void    init_pipe(t_shell *shell)
+{
+    int i;
+
+    i = 0;
+	while (i < shell->redir.pipe_nbr)
+    {
+        shell->redir.pid_pipe[i] = -1;
+        i++;
+    }
+}
+
 void    init_std(t_shell *shell)
 {
     dup2(shell->redir.in, STDIN);

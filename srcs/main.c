@@ -68,19 +68,29 @@ static void	quit_handler(int code)
 static void	minishell(t_shell *shell, t_final_command *cmd)
 {
 	int	status;
+	int	i;
 
+	i = 0;
 	status = 0;
 	shell->redir.pipe_nbr = count_pipes(cmd);
+	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t) * shell->redir.pipe_nbr);
+	init_pipe(shell);
 	shell->parent = 1;
 	execution(shell, cmd);
 	if (shell->parent)
+	{
+		while (i < shell->redir.i_pipe)
+		{
+			waitpid(shell->redir.pid_pipe[i], NULL, 0);
+			i++;
+		}
 		waitpid(shell->redir.pid, &status, 0);
+	}
 	init_std(shell);
 	close_redir(shell);
 	init_redir(shell);
 	if (!shell->parent)
 	{
-		ft_putendl_fd("test", STDERR);
 		close(STDIN);
 		close(STDOUT);
 		if (shell->redir.in > 0)
@@ -95,6 +105,7 @@ static void	minishell(t_shell *shell, t_final_command *cmd)
 		if (!shell->ret)
 			shell->ret = status;
 	}
+	shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
 }
 
 static char	*ft_readline(void)
@@ -133,6 +144,7 @@ int		main(int ac, char **av, char **envp)
 	shell.exit = 0;
 	shell.redir.in = dup(STDIN);
 	shell.redir.out = dup(STDOUT);
+	shell.redir.i_pipe = -1;
 	init_redir(&shell);
 	if (init_env(&shell, envp) == ERROR)
 		return (ERROR);
@@ -156,6 +168,7 @@ int		main(int ac, char **av, char **envp)
 	free_env(shell.env);
 	close(STDIN);
 	close(STDOUT);
+	close(STDERR);
 	if (shell.redir.in > 0)
 		close(shell.redir.in);
 	if (shell.redir.out > 0)

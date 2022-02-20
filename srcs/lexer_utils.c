@@ -6,11 +6,60 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:57:28 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/15 08:23:59 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/20 04:09:24 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int		to_malloc(long n)
+{
+	int len;
+
+	len = 0;
+	if (n == 0)
+		return (1);
+	if (n < 0)
+	{
+		len++;
+		n = -n;
+	}
+	while (n > 0)
+	{
+		n = n / 10;
+		len++;
+	}
+	return (len);
+}
+
+char	*ft_itoa(int n)
+{
+	unsigned int	nb;
+	int				len;
+	char			*str;
+
+	nb = n < 0 ? -n : n;
+	len = to_malloc(n);
+	if (!(str = malloc(len * sizeof(char) + 1)))
+		return (NULL);
+	str[len--] = '\0';
+	if (n == 0)
+	{
+		str[0] = '0';
+		return (str);
+	}
+	if (n < 0)
+	{
+		str[0] = '-';
+		nb = n * -1;
+	}
+	while (nb > 0)
+	{
+		str[len--] = nb % 10 + 48;
+		nb = nb / 10;
+	}
+	return (str);
+}
 
 int	skip_spaces(char *str)
 {
@@ -80,22 +129,18 @@ int	get_token_size(char *str, int pos)
 	return (pos - token_size);
 }
 
-char	*find_env(char *str, t_char *word)
+char	*find_env(char *str, char *var, int ret)
 {
 	int		i;
-	char	*to_find;
 
 	i = 0;
-	to_find = get_var(word);
-	while (to_find[i] && str[i])
+	if (var[i] == '?')
+		return (ft_itoa(ret));
+	while (var[i] && str[i])
 	{
-		if (str[i] != to_find[i])
-		{
-			free(to_find);
+		if (str[i] != var[i])
 			return (NULL);
-		}
 		i++;
 	}
-	free(to_find);
 	return (str + i);
 }

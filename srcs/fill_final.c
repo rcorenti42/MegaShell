@@ -67,10 +67,7 @@ int	get_redir_in_nb(t_token **command)
 			if (command[i + 1] != NULL)
 			{
 				if (command[i + 1]->type == token_operand)
-				{
-					display_syntax_error(command[i + 1]->token);
 					return (-1);
-				}
 			}
 			else
 				return (-1);
@@ -99,10 +96,7 @@ int	get_redir_out_nb(t_token **command)
 			if (command[i + 1] != NULL)
 			{
 				if (command[i + 1]->type == token_operand)
-				{
-					display_syntax_error(command[i + 1]->token);
 					return (-1);
-				}
 			}
 			else
 				return (-1);
@@ -137,7 +131,6 @@ char **fill_args(t_token **command)
 	
 	ac = get_tk_nb_tmp(command)
 		- (get_redir_in_nb(command) * 2 + get_redir_out_nb(command) * 2);
-	//printf("ac=%d\n", ac);
 	args = malloc(sizeof(char *) * (ac + 1));
 	i = 0;
 	j = 0;
@@ -163,7 +156,6 @@ t_operand *fill_in(t_token **command)
 	ac = get_redir_in_nb(command);
 	if (ac < 0)
 		return (NULL);
-//	printf("in_redir = %d\n", ac);
 	in = malloc(sizeof(t_operand) * (ac + 1));
 	i = 0;
 	j = 0;
@@ -241,7 +233,7 @@ t_final_command	*lexer_fill_final(t_command *cmd_head)
 		}
 		final_tmp->redir_out = fill_out(cmd_tmp->command);
 		final_tmp->redir_in = fill_in(cmd_tmp->command);
-		if (final_tmp->redir_in != NULL && final_tmp->redir_out != NULL) 
+		if (final_tmp->redir_in != NULL && final_tmp->redir_out != NULL)
 			final_tmp->args = fill_args(cmd_tmp->command);
 		else
 			final_tmp->args = NULL;

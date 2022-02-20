@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+#include "minishell.h"
+
 t_char	*inhib_quotes(t_char *token)
 {
 	int		i;

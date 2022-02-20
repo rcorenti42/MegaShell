@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sobouatt <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 08:21:32 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/15 08:21:43 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/20 04:28:27 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,18 @@ int	get_expand_size(t_char *word)
 	int	i;
 
 	i = 1;
+	if (word[i].c == '?')
+		return (2);
+	while (word[i].c != '\0' && isdigit(word[i].c))
+		i++;
+	if (i != 1)
+		return (i);
 	while (word[i].c != '\0')
 	{
 		if (word[i].c == '\"' || word[i].c == ' ' || word[i].c == '\''
 			|| word[i].c == '$' || word[i].c == '+' || word[i].c == '-'
-			|| word[i].c == '=' || word[i].c == '/' || word[i].c == '%')
+			|| word[i].c == '=' || word[i].c == '/' || word[i].c == '%'
+			|| word[i].c == '?')
 			return (i);
 		i++;
 	}
@@ -97,6 +104,12 @@ char	*get_var(t_char *word)
 
 	str = malloc(sizeof(char) * ((get_expand_size(word) + 1)));
 	i = 1;
+	if (word[i].c == '?')
+	{
+		str[i - 1] = '?';
+		str[i] = '\0';
+		return (str);
+	}	
 	while (word[i].c != '\0' && isdigit(word[i].c))
 	{
 		str[i - 1] = word[i].c;
@@ -113,8 +126,8 @@ char	*get_var(t_char *word)
 		if (word[i].c == '\"' || word[i].c == ' ' || word[i].c == '\''
 			|| word[i].c == '$' || word[i].c == '+' || word[i].c == '-'
 			|| word[i].c == '=' || word[i].c == '/' || word[i].c == '%'
-			|| word[i].c == '_')
-			break ;
+			|| word[i].c == '_' || word[i].c == '?')
+				break ;
 		str[i - 1] = word[i].c;
 		i++;
 	}
@@ -122,3 +135,4 @@ char	*get_var(t_char *word)
 	str[i] = '\0';
 	return (str);
 }
+

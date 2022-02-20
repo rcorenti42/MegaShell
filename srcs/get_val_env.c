@@ -18,12 +18,11 @@ char	*get_val_env(char *arg, t_env *env)
 	int		j;
 	char	*ret;
 
-	ret = NULL;
 	while (env && (ft_strncmp(arg, env->val, ft_strlen(arg))
 			|| env->val[ft_strlen(arg)] != '='))
 		env = env->next;
 	if (!env)
-		return (ret);
+		return ("");
 	i = 0;
 	j = 0;
 	while (env->val[i] && env->val[i] != '=')
@@ -31,7 +30,7 @@ char	*get_val_env(char *arg, t_env *env)
 	i++;
 	ret = (char *)malloc(sizeof(char) * (ft_strlen(env->val) - i + 1));
 	if (!ret)
-		return ("");
+		return (NULL);
 	while (env->val[i])
 		ret[j++] = env->val[i++];
 	ret[j] = '\0';

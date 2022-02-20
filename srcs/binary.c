@@ -14,7 +14,7 @@
 
 static void	exec_error(char *arg)
 {
-	ft_putstr_fd("bash: ", STDERR);
+	ft_putstr_fd("megashell: ", STDERR);
 	ft_putstr_fd(arg, STDERR);
 	ft_putendl_fd(": command not found", STDERR);
 }
@@ -27,12 +27,12 @@ int		bin_exe(t_shell *shell, t_final_command *cmd)
 	env = shell->env;
 	path = get_path(shell, cmd);
 	if (!path)
+		return (ERROR);
+	else if (!ft_strcmp(path, ""))
 	{
 		exec_error(cmd->args[0]);
 		return (SUCCESS);
 	}
-	if (!path)
-		path = ft_strdup(cmd->args[0]);
 	execve(path, cmd->args, tenv_to_tab(env));
 	path = ft_memdel(path);
 	return (SUCCESS);
@@ -47,6 +47,8 @@ int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 	env = shell->env;
 	path = get_path(shell, cmd);
 	if (!path)
+		return (ERROR);
+	else if (!ft_strcmp(path, ""))
 	{
 		exec_error(cmd->args[0]);
 		return (SUCCESS);

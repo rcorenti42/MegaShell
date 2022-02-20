@@ -25,8 +25,8 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 	arg = cmd->args[0];
 	path = get_val_env("PATH", shell->env);
 	if (!path)
-		return (bin);
-	if ((arg[0] != '/') && (ft_strncmp(arg, "./", 2) != 0))
+		return (NULL);
+	if (arg[0] != '/' && ft_strncmp(arg, "./", 2) && ft_strcmp(arg, "") && ft_strcmp(path, ""))
 	{
 		path_split = ft_split(path, ':');
 		while (path_split[++i])
@@ -34,7 +34,7 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 			bin = (char *)calloc(sizeof(char), (ft_strlen(path_split[i])
 						+ ft_strlen(arg) + 2));
 			if (!bin)
-				break ;
+				return (NULL);
 			bin = ft_strcat(bin, path_split[i]);
 			bin = ft_strcat(bin, "/");
 			bin = ft_strcat(bin, arg);
@@ -42,12 +42,15 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 				break ;
 			bin = ft_memdel(bin);
 		}
+		if (!bin)
+		{
+			bin = ft_strdup("");
+			return (bin);
+		}
 		free_tab(path_split);
 	}
 	else
-	{
 		bin = ft_strdup(arg);
-	}
 	path = ft_memdel(path);
 	return (bin);
 }

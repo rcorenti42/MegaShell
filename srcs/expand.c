@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 07:56:33 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/15 08:23:19 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/20 06:38:08 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,20 @@ void	fill_tchar(t_char *c, char newchar, char newinhib, int *incr)
 	c->c = newchar;
 	c->inhib = newinhib;
 	(*incr)++;
+}
+
+void	put_tchar(t_char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return ;
+	while (str[i].c != '\0')
+	{
+		write(1, &str[i].c, 1);
+		i++;
+	}
 }
 
 t_char	*expand_unknown(t_char *token, t_char *word, char *var)
@@ -44,7 +58,9 @@ void	fill_expanded(t_char *new, t_char *tk, t_char *word, char *exp)
 
 	i = 0;
 	j = 0;
+	//printf("%s\n", exp);
 	exp_size = get_expand_size(word);
+	//printf("exp_size=%d\n", exp_size);
 	while (tk + i != word)
 		fill_tchar(&new[i], tk[i].c, tk[i].inhib, &i);
 	while (exp[j] != '\0')
@@ -52,6 +68,8 @@ void	fill_expanded(t_char *new, t_char *tk, t_char *word, char *exp)
 	while (tk[i + exp_size].c != '\0')
 		fill_tchar(&new[i + j], tk[i + exp_size].c, tk[i + exp_size].inhib, &i);
 	new[i + j].c = '\0';
+	if (word[1].c == '?')
+		free(exp);
 }
 
 t_char	*expand(t_char *tk, t_char *word, t_env *env)
@@ -63,7 +81,7 @@ t_char	*expand(t_char *tk, t_char *word, t_env *env)
 	var = get_var(word);
 	while (env)
 	{
-		exp = find_env(env->val, word);
+		exp = find_env(env->val, var, env->ret);
 		if (exp != NULL)
 		{
 			new = malloc(sizeof(t_token)
@@ -97,9 +115,10 @@ t_command	*lexer_expand(t_command *head, t_env *env)
 			{	
 				tmp = expand(node->command[i]->token, chr_rt, env);
 				if (tmp != NULL)
+				{
 					free(node->command[i]->token);
-				if (tmp != NULL)
 					node->command[i]->token = tmp;
+				}
 				chr_rt = char_chr(node->command[i]->token, '$');
 			}
 		}

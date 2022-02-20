@@ -14,7 +14,7 @@
 
 static void	ft_error_cd(char *str)
 {
-	ft_putstr_fd("cd: ", STDERR);
+	ft_putstr_fd("megashell: cd: ", STDERR);
 	ft_putstr_fd(str, STDERR);
 	ft_putstr_fd(": ", STDERR);
 	ft_putendl_fd(strerror(errno), STDERR);
@@ -32,7 +32,7 @@ int	ft_cd(t_shell *shell, t_final_command *cmd)
 	{
 		str = get_val_env("HOME", env);
 		if (!str)
-			ft_putstr_fd("cd: HOME not set\n", STDERR);
+			ft_putstr_fd("megashell: cd: HOME not set\n", STDERR);
 		else if (!ft_strcmp(str, ""))
 			ret = ERROR;
 		else

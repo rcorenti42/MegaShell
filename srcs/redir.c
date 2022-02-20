@@ -39,15 +39,15 @@ static int	ft_heredoc(t_shell *shell, t_final_command *cmd, char *str)
 
 int	ft_pipe(t_shell *shell)
 {
-	pid_t	pid;
 	int		fd[2];
 
 	if (pipe(fd))
 		return (-1);
-	pid = fork();
-	if (pid == -1)
+	(shell->redir.pid_pipe)[shell->redir.i_pipe] = fork();
+	(shell->redir.i_pipe)++;
+	if (shell->redir.pid_pipe[shell->redir.i_pipe - 1] == -1)
 		return (-1);
-	else if (pid == 0)
+	else if (shell->redir.pid_pipe[shell->redir.i_pipe - 1] == 0)
 	{
 		if (fd[0] > 0)
 			close(fd[0]);
@@ -63,7 +63,6 @@ int	ft_pipe(t_shell *shell)
 			close(fd[1]);
 		dup2(fd[0], STDIN);
 		shell->redir.in_pipe = fd[0];
-		shell->redir.pid = pid;
 		return (2);
 	}
 }
@@ -76,7 +75,7 @@ static int	ft_input(t_shell *shell, t_final_command *cmd, char *str)
 	if (shell->redir.in_fd == -1)
 	{
 		ft_putstr_fd("bash: ", STDERR);
-		ft_putstr_fd(cmd->args[0], STDERR);
+		ft_putstr_fd(str, STDERR);
 		ft_putendl_fd(": No such file or directory", STDERR);
 		shell->ret = 1;
 		return (ERROR);

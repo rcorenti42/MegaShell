@@ -35,14 +35,14 @@ void	ft_exit(t_shell *shell, t_final_command *cmd)
 	{
 		if (ft_isnumber(cmd->args[1]))
 		{
-			ft_putstr_fd("exit: ", STDERR);
+			ft_putstr_fd("megashell: exit: ", STDERR);
 			ft_putstr_fd(cmd->args[1], STDERR);
 			ft_putendl_fd(": numeric argument required", STDERR);
 			shell->ret = 2;
 		}
 		else if (cmd->args[2])
 		{
-			ft_putendl_fd("exit: too many arguments", STDERR);
+			ft_putendl_fd("megashell: exit: too many arguments", STDERR);
 			shell->ret = 1;
 			return ;
 		}

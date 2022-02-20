@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/18 15:35:53 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/20 04:08:39 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ typedef struct s_env
 typedef struct s_redir
 {
 	pid_t		pid;
-	int		*fd;
+	pid_t		*pid_pipe;
+	int		i_pipe;
 	int		pipe_nbr;
 	int		in;
 	int		in_pipe;
@@ -115,10 +116,10 @@ int			skip_spaces(char *str);
 int			treat_quote(char c, int quote);
 char		*show_type(int type);
 void		free_tokens(t_token *token);
-char		*find_env(char *str, t_char *word);
+char		*find_env(char *str, char *var, int ret);
 
 //lexer_first_pass.c
-t_token		*lexer_first_pass(char *str);
+t_token	*lexer_first_pass(char *str, t_env *env);
 t_char		*get_token(char *str, int *pos);
 
 //utils.c
@@ -187,9 +188,10 @@ void    close_redir(t_shell *shell);
 void    init_std(t_shell *shell);
 void    init_redir(t_shell *shell);
 void	free_final(t_final_command *head);
+void    init_pipe(t_shell *shell);
 
 t_final_command *lexer_fill_final(t_command *cmd_head);
-void	display_syntax_error(t_char *token);
+void display_syntax_error(t_env *env);
 
 
 #endif

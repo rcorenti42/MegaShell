@@ -63,8 +63,6 @@ t_command	*lexer_split_cmd(t_token *tk_head)
 		cmd_head->command[0] = NULL;
 		return (cmd_head);
 	}
-	if (tk_node->type == token_pipe)
-		display_syntax_error(tk_node->token);
 	while (tk_node)
 	{
 		prepare_node(&cmd_head, &cmd_node);
