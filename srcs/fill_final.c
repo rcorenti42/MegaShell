@@ -66,15 +66,18 @@ int	get_redir_in_nb(t_token **command)
 			j++;
 			if (command[i + 1] != NULL)
 			{
-				if (command[i + 1]->type != token_word)
+				if (command[i + 1]->type == token_operand)
+				{
+					display_syntax_error(command[i + 1]->token);
 					return (-1);
+				}
 			}
 			else
 				return (-1);
 		}
 		i++;
 	}
-	return (j);	
+	return (j);
 }
 
 int	get_redir_out_nb(t_token **command)
@@ -95,8 +98,11 @@ int	get_redir_out_nb(t_token **command)
 			j++;
 			if (command[i + 1] != NULL)
 			{
-				if (command[i + 1]->type != token_word)
+				if (command[i + 1]->type == token_operand)
+				{
+					display_syntax_error(command[i + 1]->token);
 					return (-1);
+				}
 			}
 			else
 				return (-1);
@@ -129,7 +135,8 @@ char **fill_args(t_token **command)
 	int i;
 	int j;
 	
-	ac = get_tk_nb_tmp(command) - (get_redir_in_nb(command) * 2 + get_redir_out_nb(command) * 2);
+	ac = get_tk_nb_tmp(command)
+		- (get_redir_in_nb(command) * 2 + get_redir_out_nb(command) * 2);
 	//printf("ac=%d\n", ac);
 	args = malloc(sizeof(char *) * (ac + 1));
 	i = 0;

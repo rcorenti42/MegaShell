@@ -63,9 +63,6 @@ t_final_command *detect_errors(t_final_command *param)
 		if (ptr->redir_in == NULL || ptr->redir_out == NULL
 			|| ptr->args == NULL)
 			error = 1;
-		if (error == 0)
-			if (ptr->args[0] == NULL)
-				error = 1;
 		if (error != 0)
 		{
 			free_final(param);
@@ -104,10 +101,15 @@ t_final_command	*lexer(char *str, t_env *env)
 	t_token		*tk_head;
 	t_command	*cmd_head;
 	t_final_command *final_head;
-
+	char			c;
 	if (proxy(str) != 0)
 	{
-		printf("minishell: syntax error near unexpected token '%c'\n", proxy2(str));
+		write(2, "minishell: syntax error near unexpected token '",
+			ft_strlen("minishell: syntax error near unexpected token '"));
+		c = proxy2(str);
+		write(2, &c, 1);
+		write(2, "'\n", 2);
+		
 		return (NULL);
 	}
 	tk_head = lexer_first_pass(str);

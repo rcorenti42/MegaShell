@@ -189,5 +189,7 @@ void    init_redir(t_shell *shell);
 void	free_final(t_final_command *head);
 
 t_final_command *lexer_fill_final(t_command *cmd_head);
+void	display_syntax_error(t_char *token);
+
 
 #endif

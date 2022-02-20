@@ -107,3 +107,14 @@ int	count_pipes(t_final_command *cmd)
 	}
 	return (ret - 1);
 }
+
+void	display_syntax_error(t_char *token)
+{
+	int i;
+	write(2, "megashell: syntax error near unexpected token '",
+		ft_strlen("megashell: syntax error near unexpected token '"));
+	i = 0;
+	while (token[i].c != '\0')
+		write(2, &token[i++].c, 1);
+	write(2, "'\n", 2);
+}
