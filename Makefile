@@ -84,13 +84,25 @@ $(LIBFT):
 	make -C ./libft
 
 clean:
-		@rm -f $(OBJS)
-		@rm -rf $(LIBFT)
-		@make clean -C libft
+	@rm -f $(OBJS)
+	@rm -rf $(LIBFT)
+	@make clean -C libft
 
 fclean: clean
-		@rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
+
+SHELL:=/bin/bash
+
+val: 
+	@make
+	@make clean
+	@source ./home.sh
+	@valshell
+
+reval: 
+	@make fclean
+	@make val
 
 .PHONY: all clean fclean re val reval
