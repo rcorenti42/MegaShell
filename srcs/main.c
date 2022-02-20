@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/18 14:25:21 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/20 13:46:42 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,10 @@ static char	*ft_readline(void)
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handler);
 
-	ret = readline("Megashell: ");
+	//ret = readline("Megashell: ");
 
-
-	//ret = readline(M E G A S H E L L ": \e[0m");
+	rl_outstream = stderr;
+	ret = readline(M E G A S H E L L ": ");
 
 
 
@@ -144,13 +144,13 @@ int		main(int ac, char **av, char **envp)
 	shell.exit = 0;
 	shell.redir.in = dup(STDIN);
 	shell.redir.out = dup(STDOUT);
-	shell.redir.i_pipe = -1;
 	shell.redir.pipe_nbr = 0;
 	init_redir(&shell);
 	if (init_env(&shell, envp) == ERROR)
 		return (ERROR);
 	while (!shell.exit)
 	{
+		shell.redir.i_pipe = -1;
 		input = ft_readline();
 		if (ft_strcmp(input, ""))
 		{

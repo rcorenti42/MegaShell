@@ -50,6 +50,7 @@ int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 		return (ERROR);
 	else if (!ft_strcmp(path, ""))
 	{
+		path = ft_memdel(path);
 		exec_error(cmd->args[0]);
 		return (SUCCESS);
 	}

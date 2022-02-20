@@ -47,7 +47,7 @@ int	ft_pipe(t_shell *shell)
 	(shell->redir.pid_pipe)[shell->redir.i_pipe] = fork();
 	if (shell->redir.pid_pipe[shell->redir.i_pipe] == -1)
 		return (-1);
-	else if (shell->redir.pid_pipe[shell->redir.i_pipe - 1] == 0)
+	else if (shell->redir.pid_pipe[shell->redir.i_pipe] == 0)
 	{
 		if (fd[0] > 0)
 			close(fd[0]);
