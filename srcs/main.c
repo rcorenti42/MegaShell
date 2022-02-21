@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/21 08:37:27 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 10:52:05 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ int		main(int ac, char **av, char **envp)
 		{
 			shell.env->ret = shell.ret;
 			head = lexer(input, shell.env);
+			shell.ret = shell.env.ret;
 			if (head != NULL)
 			{
 				if (minishell(&shell, head) == ERROR)
