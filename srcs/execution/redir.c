@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 08:18:16 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:28:44 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static int	ft_input(t_shell *shell, t_final_command *cmd, char *str)
 	{
 		if (close(shell->redir.in_fd) == -1)
 			return (ERROR);
+	}
 	shell->redir.in_fd = open(str, O_RDONLY, S_IRWXU);
 	if (shell->redir.in_fd == -1)
 		return (SUCCESS);
