@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:47:51 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/17 08:18:24 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 07:57:31 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 	if (arg[0] != '/' && ft_strncmp(arg, "./", 2) && ft_strcmp(arg, "") && ft_strcmp(path, ""))
 	{
 		path_split = ft_split(path, ':');
+		if (!path_split)
+			return (NULL);
 		while (path_split[++i])
 		{
 			bin = (char *)calloc(sizeof(char), (ft_strlen(path_split[i])
@@ -38,7 +40,7 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 			bin = ft_strcat(bin, path_split[i]);
 			bin = ft_strcat(bin, "/");
 			bin = ft_strcat(bin, arg);
-			if (!access(bin, F_OK))
+			if (!access(bin, X_OK))
 				break ;
 			bin = ft_memdel(bin);
 		}
@@ -46,13 +48,19 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 		{
 			free_tab(path_split);
 			bin = ft_strdup("");
+			if (!bin)
+				return (NULL);
 			path = ft_memdel(path);
 			return (bin);
 		}
 		free_tab(path_split);
 	}
 	else
+	{
 		bin = ft_strdup(arg);
+		if (!bin)
+			return (NULL);
+	}
 	path = ft_memdel(path);
 	return (bin);
 }

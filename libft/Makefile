@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/28 02:14:43 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/16 11:41:17 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/20 16:50:14 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,8 @@ DIR_O = ft_memdel.c \
 	ft_strncmp.c \
 	ft_atoi.c \
 	ft_isspace.c \
+	ft_isalpha.c \
+	ft_isalnum.c \
 
 OBJS = ${addprefix srcs/,${DIR_O:.c=.o}}
 

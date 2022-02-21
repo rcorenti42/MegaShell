@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:14:37 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/17 08:26:36 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 05:34:56 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,13 @@ char	**tenv_to_tab(t_env *env)
 
 	i = 0;
 	ret = (char **)malloc(sizeof(char *) * (ft_env_size(env) + 1));
+	if (!ret)
+		return (NULL);
 	while (env)
 	{
 		ret[i] = (char *)malloc(sizeof(char) * (ft_strlen(env->val) + 1));
+		if (!ret[i])
+			return (NULL);
 		j = 0;
 		while (env->val[j])
 		{

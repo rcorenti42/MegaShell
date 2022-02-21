@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/20 13:46:42 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 07:44:02 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	quit_handler(int code)
 	}
 }
 
-static void	minishell(t_shell *shell, t_final_command *cmd)
+static int	minishell(t_shell *shell, t_final_command *cmd)
 {
 	int	status;
 	int	i;
@@ -76,7 +76,8 @@ static void	minishell(t_shell *shell, t_final_command *cmd)
 	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t) * shell->redir.pipe_nbr);
 	init_pipe(shell);
 	shell->parent = 1;
-	execution(shell, cmd);
+	if (execution(shell, cmd) == ERROR)
+		return (ERROR);
 	if (shell->parent)
 	{
 		while (i < shell->redir.i_pipe)
@@ -86,17 +87,26 @@ static void	minishell(t_shell *shell, t_final_command *cmd)
 		}
 		waitpid(shell->redir.pid, &status, 0);
 	}
-	init_std(shell);
+	if (init_std(shell) == ERROR)
+		return (ERROR);
 	close_redir(shell);
 	init_redir(shell);
 	if (!shell->parent)
 	{
-		close(STDIN);
-		close(STDOUT);
+		if (close(STDIN) == -1)
+			return (ERROR);
+		if (close(STDOUT) == -1)
+			return (ERROR);
 		if (shell->redir.in > 0)
-			close(shell->redir.in);
+		{
+			if (close(shell->redir.in) == -1)
+				return (ERROR);
+		}
 		if (shell->redir.out > 0)
-			close(shell->redir.out);
+		{
+			if (close(shell->redir.out) == -1)
+				return (ERROR);
+		}
 		exit(shell->ret);
 	}
 	if (WIFEXITED(status))
@@ -106,6 +116,7 @@ static void	minishell(t_shell *shell, t_final_command *cmd)
 			shell->ret = status;
 	}
 	shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
+	return (SUCCESS);
 }
 
 static char	*ft_readline(void)
@@ -115,14 +126,8 @@ static char	*ft_readline(void)
 	ret = NULL;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handler);
-
-	//ret = readline("Megashell: ");
-
 	rl_outstream = stderr;
-	ret = readline(M E G A S H E L L ": ");
-
-
-
+	ret = readline(M E G A S H E X L _ " ");
 	if (!ret)
 		ret = ft_strdup("exit");
 	else if (ft_strcmp(ret, ""))
@@ -143,7 +148,11 @@ int		main(int ac, char **av, char **envp)
 	shell.ret = 0;
 	shell.exit = 0;
 	shell.redir.in = dup(STDIN);
+	if (shell.redir.in == -1)
+		return (ERROR);
 	shell.redir.out = dup(STDOUT);
+	if (shell.redir.out == -1)
+		return (ERROR);
 	shell.redir.pipe_nbr = 0;
 	init_redir(&shell);
 	if (init_env(&shell, envp) == ERROR)
@@ -156,23 +165,29 @@ int		main(int ac, char **av, char **envp)
 		{
 			shell.env->ret = shell.ret;
 			head = lexer(input, shell.env);
-			shell.ret = shell.env->ret;
-
+			if (shell.ret == shell.env->ret)
+				shell.ret = 0;
 			if (head != NULL)
 			{
-				minishell(&shell, head);
+				if (minishell(&shell, head) == ERROR)
+					return (ERROR);
 				free_final(head);
 			}
 		}
 		input = ft_memdel(input);
 	}
 	free_env(shell.env);
-	close(STDIN);
-	close(STDOUT);
-	close(STDERR);
+	if (close(STDIN) == -1 || close(STDOUT) == -1 || close(STDERR) == -1)
+		return (ERROR);
 	if (shell.redir.in > 0)
-		close(shell.redir.in);
+	{
+		if (close(shell.redir.in) == -1)
+			return (ERROR);
+	}
 	if (shell.redir.out > 0)
-		close(shell.redir.out);
+	{
+		if (close(shell.redir.out) == -1)
+			return (ERROR);
+	}
 	return (shell.ret);
 }

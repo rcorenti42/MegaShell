@@ -3,24 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:27:34 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/12 06:59:42 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 04:51:12 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(t_shell *shell)
 {
 	char	*cwd;
-
+	
 	cwd = (char *)malloc(sizeof(char) * (PATH_MAX + 5));
 	if (!cwd)
 		return (ERROR);
 	if (!getcwd(cwd, PATH_MAX))
-		return (ERROR);
+	{
+		ft_putstr_fd("pwd: error retrieving current directory: getcwd: cannot access parent directories: ", STDERR);
+		ft_putendl_fd(strerror(errno), STDERR);
+		cwd = ft_memdel(cwd);
+		shell->ret = 1;
+		return (SUCCESS);
+	}
 	ft_putendl_fd(cwd, STDOUT);
 	cwd = ft_memdel(cwd);
 	return (SUCCESS);

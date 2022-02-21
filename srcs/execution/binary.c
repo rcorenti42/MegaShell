@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 11:26:41 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/17 08:02:50 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 07:54:34 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,25 @@ int		bin_exe(t_shell *shell, t_final_command *cmd)
 {
 	char	*path;
 	t_env	*env;
+	char	**tenv;
 
 	env = shell->env;
+	tenv = tenv_to_tab(env);
+	if (!tenv)
+		return (ERROR);
 	path = get_path(shell, cmd);
 	if (!path)
 		return (ERROR);
 	else if (!ft_strcmp(path, ""))
 	{
+		shell->ret = 127;
 		exec_error(cmd->args[0]);
+		free_tab(tenv);
 		return (SUCCESS);
 	}
-	execve(path, cmd->args, tenv_to_tab(env));
+	if (execve(path, cmd->args, tenv) == -1)
+		return (ERROR);
+	free_tab(tenv);
 	path = ft_memdel(path);
 	return (SUCCESS);
 }
@@ -52,6 +60,7 @@ int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 	{
 		path = ft_memdel(path);
 		exec_error(cmd->args[0]);
+		shell->ret = 127;
 		return (SUCCESS);
 	}
 	shell->redir.pid = fork();
@@ -65,7 +74,8 @@ int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 		shell->parent = 0;
 		if (!path)
 			path = ft_strdup(cmd->args[0]);
-		execve(path, cmd->args, tenv_to_tab(env));
+		if (execve(path, cmd->args, tenv_to_tab(env)) == -1)
+			return (ERROR);
 	}
 	path = ft_memdel(path);
 	return (SUCCESS);

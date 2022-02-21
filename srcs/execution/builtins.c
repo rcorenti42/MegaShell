@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:33:13 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/17 05:07:09 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 04:53:21 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	builtin_exe(t_shell *shell, t_final_command *cmd)
 	if (!ft_strcmp(str, "cd"))
 		ret = ft_cd(shell, cmd);
 	if (!ft_strcmp(str, "pwd"))
-		ret = ft_pwd();
+		ret = ft_pwd(shell);
 	if (!ft_strcmp(str, "export"))
 		ret = ft_export(shell, cmd);
 	if (!ft_strcmp(str, "unset"))

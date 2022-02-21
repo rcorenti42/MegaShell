@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 11:51:12 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/17 11:51:13 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:02:07 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,13 @@ void    init_pipe(t_shell *shell)
     }
 }
 
-void    init_std(t_shell *shell)
+int    init_std(t_shell *shell)
 {
-    dup2(shell->redir.in, STDIN);
-    dup2(shell->redir.out, STDOUT);
+    if (dup2(shell->redir.in, STDIN) == -1)
+        return (ERROR);
+    if (dup2(shell->redir.out, STDOUT) == -1)
+        return (ERROR);
+    return (SUCCESS);
 }
 
 void    close_redir(t_shell *shell)

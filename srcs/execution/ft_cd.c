@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 18:35:54 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 14:37:02 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 05:07:43 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,29 @@ int	ft_cd(t_shell *shell, t_final_command *cmd)
 	{
 		str = get_val_env("HOME", env);
 		if (!str)
-			ft_putstr_fd("megashell: cd: HOME not set\n", STDERR);
+		{
+			shell->ret = 1;
+			ft_putendl_fd("megashell: cd: HOME not set", STDERR);
+		}
 		else if (!ft_strcmp(str, ""))
 			ret = ERROR;
 		else
 		{
 			if (chdir(str) == -1)
+			{
+				shell->ret = 1;
 				ft_error_cd(str);
+			}
 		}
 		str = ft_memdel(str);
 	}
 	else
 	{
 		if (chdir(cmd->args[1]) == -1)
+		{
+			shell->ret = 1;
 			ft_error_cd(cmd->args[1]);
+		}
 	}
 	return (ret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/20 04:08:39 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/21 07:57:16 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ char		*ft_strchr(const char *s, int c);
 t_char		*char_chr(t_char *str, int c);
 
 //EXECUTION
-void	execution(t_shell *shell, t_final_command *cmd);
+int		execution(t_shell *shell, t_final_command *cmd);
 char	*get_path(t_shell *shell, t_final_command *cmd);
 int		redir(t_shell *shell, t_final_command *cmd);
 int	bin_exe(t_shell *shell, t_final_command *cmd);
@@ -170,7 +170,7 @@ char	*get_val_env(char *arg, t_env *env);
 
 //BUILTINS
 void	ft_unset(t_shell *shell, t_final_command *cmd);
-int		ft_pwd(void);
+int		ft_pwd(t_shell *shell);
 int		ft_export(t_shell *shell, t_final_command *cmd);
 void	ft_env(t_shell *shell);
 void	ft_echo(t_shell *shell, t_final_command *cmd);
@@ -185,7 +185,7 @@ char	**tenv_to_tab(t_env *env);
 void	free_tab(char **tab);
 void	free_env(t_env *env);
 void    close_redir(t_shell *shell);
-void    init_std(t_shell *shell);
+int	    init_std(t_shell *shell);
 void    init_redir(t_shell *shell);
 void	free_final(t_final_command *head);
 void    init_pipe(t_shell *shell);

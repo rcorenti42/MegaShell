@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:30 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 11:40:19 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/20 16:50:40 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_atoi(char *str);
 int		ft_isspace(int c);
+int     ft_isalpha(int c);
+int     ft_isalnum(int c);
 
 #endif

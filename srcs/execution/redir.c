@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/18 13:49:39 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:18:16 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	error_redir(t_shell *shell, char *str)
+{
+	ft_putstr_fd("megashell: ", STDERR);
+	ft_putstr_fd(str, STDERR);
+	ft_putendl_fd(strerror(errno), STDERR);
+	shell->ret = 1;
+}
 
 static int	ft_heredoc(t_shell *shell, t_final_command *cmd, char *str)
 {
@@ -18,8 +26,7 @@ static int	ft_heredoc(t_shell *shell, t_final_command *cmd, char *str)
 	int		fd[2];
 	int		tmp;
 
-	if (pipe(fd))
-		return (ERROR);
+	pipe(fd);
 	while (1)
 	{
 		line = readline("> ");
@@ -29,11 +36,18 @@ static int	ft_heredoc(t_shell *shell, t_final_command *cmd, char *str)
 		line = ft_memdel(line);
 	}
 	line = ft_memdel(line);
-	dup2(fd[0], STDIN);
+	if (dup2(fd[0], STDIN) == -1)
+		return (ERROR);
 	if (fd[0] > 0)
-		close(fd[0]);
+	{
+		if (close(fd[0]) == -1)
+			return (ERROR);
+	}
 	if (fd[1] > 0)
-		close(fd[1]);
+	{
+		if (close(fd[1]) == -1)
+			return (ERROR);
+	}
 	return (SUCCESS);
 }
 
@@ -41,8 +55,7 @@ int	ft_pipe(t_shell *shell)
 {
 	int		fd[2];
 
-	if (pipe(fd))
-		return (-1);
+	pipe(fd);
 	(shell->redir.i_pipe)++;
 	(shell->redir.pid_pipe)[shell->redir.i_pipe] = fork();
 	if (shell->redir.pid_pipe[shell->redir.i_pipe] == -1)
@@ -50,8 +63,12 @@ int	ft_pipe(t_shell *shell)
 	else if (shell->redir.pid_pipe[shell->redir.i_pipe] == 0)
 	{
 		if (fd[0] > 0)
-			close(fd[0]);
-		dup2(fd[1], STDOUT);
+		{
+			if (close(fd[0]) == -1)
+				return (-1);
+		}
+		if (dup2(fd[1], STDOUT))
+			return (-1);
 		shell->redir.out_pipe = fd[1];
 		shell->redir.pid = -1;
 		shell->parent = 0;
@@ -60,8 +77,12 @@ int	ft_pipe(t_shell *shell)
 	else
 	{
 		if (fd[1] > 0)
-			close(fd[1]);
-		dup2(fd[0], STDIN);
+		{
+			if (close(fd[1]) == -1)
+				return (-1);
+		}
+		if (dup2(fd[0], STDIN) == -1)
+			return (-1);
 		shell->redir.in_pipe = fd[0];
 		return (2);
 	}
@@ -70,17 +91,14 @@ int	ft_pipe(t_shell *shell)
 static int	ft_input(t_shell *shell, t_final_command *cmd, char *str)
 {
 	if (shell->redir.in_fd > 0)
-		close(shell->redir.in_fd);
+	{
+		if (close(shell->redir.in_fd) == -1)
+			return (ERROR);
 	shell->redir.in_fd = open(str, O_RDONLY, S_IRWXU);
 	if (shell->redir.in_fd == -1)
-	{
-		ft_putstr_fd("megashell: ", STDERR);
-		ft_putstr_fd(str, STDERR);
-		ft_putendl_fd(": No such file or directory", STDERR);
-		shell->ret = 1;
+		return (SUCCESS);
+	if (dup2(shell->redir.in_fd, STDIN) == -1)
 		return (ERROR);
-	}
-	dup2(shell->redir.in_fd, STDIN);
 	return (SUCCESS);
 }
 
@@ -107,20 +125,21 @@ int			redir(t_shell *shell, t_final_command *cmd)
 	while (cmd->redir_out[i].redir)
 	{
 		if (shell->redir.out_fd > 0)
-			close(shell->redir.out_fd);
+		{	
+			if (close(shell->redir.out_fd) == -1)
+				return (ERROR);
+		}
 		if (cmd->redir_out[i].type == simple)
 			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
 		else
 			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
 		if (shell->redir.out_fd == -1)
 		{
-			ft_putstr_fd("megashell: ", STDERR);
-			ft_putstr_fd(cmd->redir_out[i].redir, STDERR);
-			ft_putendl_fd(": No such file or directory", STDERR);
-			shell->ret = 1;
+			error_redir(shell, cmd->redir_out[i].redir);
 			return (ERROR);
 		}
-		dup2(shell->redir.out_fd, STDOUT);
+		if (dup2(shell->redir.out_fd, STDOUT) == -1)
+			return (ERROR);
 		i++;
 	}
 	return (SUCCESS);

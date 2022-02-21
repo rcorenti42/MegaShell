@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   colors.h                                           :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/06 00:10:24 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/21 03:10:09 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/02/20 16:36:06 by rcorenti          #+#    #+#             */
+/*   Updated: 2022/02/20 16:52:05 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COLORS_H
-# define COLORS_H
+#include "libft.h"
 
-# define M "\001\e[1;91m\002M"
-# define E "\001\e[1;93m\002e"
-# define G "\001\e[1;92m\002g"
-# define A "\001\e[1;93m\002a"
-# define S "\001\e[1;94m\002S"
-# define H "\001\e[1;95m\002h"
-# define X "\001\e[1;96m\002l"
-# define L "\001\e[1;91m\002l"
-# define _ "\001\e[1;97m\002:"
-
-#endif
+int ft_isalpha(int c)
+{
+    if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+        return (1);
+    else
+        return (0);
+}
