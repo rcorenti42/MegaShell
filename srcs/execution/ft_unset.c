@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 10:03:27 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 14:38:23 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:36:33 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	ft_unset(t_shell *shell, t_final_command *cmd)
 	t_env	*tmp;
 
 	i = 0;
+	shell->ret = 0;
 	while (cmd->args[++i])
 	{
 		env = shell->env;

@@ -87,10 +87,7 @@ int	get_expand_size(t_char *word)
 		return (i);
 	while (word[i].c != '\0')
 	{
-		if (word[i].c == '\"' || word[i].c == ' ' || word[i].c == '\''
-			|| word[i].c == '$' || word[i].c == '+' || word[i].c == '-'
-			|| word[i].c == '=' || word[i].c == '/' || word[i].c == '%'
-			|| word[i].c == '?')
+		if ((word[i].c < 'a' || word->c > 'z') && (word[i].c < 'A' || word->c > 'Z') && word->c != '_')
 			return (i);
 		i++;
 	}
@@ -123,10 +120,7 @@ char	*get_var(t_char *word)
 	}
 	while (word[i].c != '\0')
 	{
-		if (word[i].c == '\"' || word[i].c == ' ' || word[i].c == '\''
-			|| word[i].c == '$' || word[i].c == '+' || word[i].c == '-'
-			|| word[i].c == '=' || word[i].c == '/' || word[i].c == '%'
-			|| word[i].c == '_' || word[i].c == '?')
+		if ((word[i].c < 'a' || word->c > 'z') && (word[i].c < 'A' || word->c > 'Z') && word->c != '_')
 				break ;
 		str[i - 1] = word[i].c;
 		i++;

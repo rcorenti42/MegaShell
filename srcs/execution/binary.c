@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 11:26:41 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 07:54:34 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:35:04 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int		bin_exe(t_shell *shell, t_final_command *cmd)
 	t_env	*env;
 	char	**tenv;
 
+	shell->ret = 0;
 	env = shell->env;
 	tenv = tenv_to_tab(env);
 	if (!tenv)
@@ -52,6 +53,7 @@ int    bin_exe_fork(t_shell *shell, t_final_command *cmd)
 	int	status;
 	t_env	*env;
 
+	shell->ret = 0;
 	env = shell->env;
 	path = get_path(shell, cmd);
 	if (!path)

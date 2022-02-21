@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:00:42 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/16 14:37:27 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:35:54 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	ft_echo(t_shell *shell, t_final_command *cmd)
 
 	n = 0;
 	i = 1;
+	shell->ret = 0;
 	while (cmd->args[i])
 	{
 		if (!if_valid_n(cmd->args[i]))

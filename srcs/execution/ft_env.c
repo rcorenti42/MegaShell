@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:16:07 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/15 02:43:58 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:36:01 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	ft_env(t_shell *shell)
 {
 	t_env	*env;
 
+	shell->ret = 0;
 	env = shell->env;
 	while (env)
 	{

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:27:34 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 04:51:12 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:36:21 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	ft_pwd(t_shell *shell)
 {
 	char	*cwd;
 	
+	shell->ret = 0;
 	cwd = (char *)malloc(sizeof(char) * (PATH_MAX + 5));
 	if (!cwd)
 		return (ERROR);

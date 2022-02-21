@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 18:35:54 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 05:07:43 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:35:34 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	ft_cd(t_shell *shell, t_final_command *cmd)
 	t_env	*env;
 
 	ret = SUCCESS;
+	shell->ret = 0;
 	env = shell->env;
 	if (!cmd->args[1])
 	{

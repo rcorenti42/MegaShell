@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 07:57:16 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 10:36:51 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_shell
 //lexer.c
 t_final_command		*lexer(char *str, t_env *env);
 int				get_token_size(char *str, int pos);
+void	free_cmd(t_command *head);
 
 //lexer_utils.c
 int			skip_spaces(char *str);

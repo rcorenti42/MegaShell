@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 23:46:10 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 07:40:16 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 08:36:18 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ int	ft_export(t_shell *shell, t_final_command *cmd)
 	t_env	*env;
 
 	i = 1;
+	shell->ret = 0;
 	env = shell->env;
 	if (!cmd->args[i])
 		ft_env(shell);
