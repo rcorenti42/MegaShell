@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/20 18:56:13 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/22 05:22:59 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ EXEC = execution
 
 SRCS1 = main.c \
 	utils.c \
+	display_args.c \
 
 SRCS2 = lexer.c \
 	lexer_utils.c \
@@ -59,7 +60,7 @@ LIBFT = libft/libft.a
 
 CC = clang
 
-CFLAGS = -g3# -Wall -Wextra -Werror
+CFLAGS = -g3 # -Wall -Wextra -Werror -fsanitize=address
 
 OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
 
@@ -100,7 +101,7 @@ val:
 	@make clean
 	@source ./home.sh
 	@valshell
-
+	
 reval: 
 	@make fclean
 	@make val

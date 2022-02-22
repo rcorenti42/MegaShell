@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 11:26:41 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 08:35:04 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 03:43:30 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,16 @@ int		bin_exe(t_shell *shell, t_final_command *cmd)
 		return (ERROR);
 	path = get_path(shell, cmd);
 	if (!path)
+	{
+		free_tab(tenv);
 		return (ERROR);
+	}
 	else if (!ft_strcmp(path, ""))
 	{
 		shell->ret = 127;
 		exec_error(cmd->args[0]);
 		free_tab(tenv);
+		path = ft_memdel(path);
 		return (SUCCESS);
 	}
 	if (execve(path, cmd->args, tenv) == -1)

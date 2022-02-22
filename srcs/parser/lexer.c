@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:52:10 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/20 06:38:52 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/22 05:24:58 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,12 @@ t_final_command	*lexer(char *str, t_env *env)
 	t_command	*cmd_head;
 	t_final_command *final_head;
 
-	char			c;
 	if (proxy(str) != 0)
 	{
 		display_syntax_error(env);
 		return (NULL);
 	}
-	tk_head = lexer_first_pass(str, env);
+	tk_head = lexer_first_pass(str);
 	if (tk_head == NULL)
 		return (NULL);
 	tk_head = lexer_second_pass(tk_head);

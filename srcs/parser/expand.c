@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 07:56:33 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/20 06:38:08 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/21 22:22:06 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int expand(t_command *cmd, size_t pos, t_char *word, t_env *env)
 		t_char *replace_t_chars = expand_quoted(cmd->command[pos]->token, word, env);
 		if (replace_t_chars == NULL)
 			return (-1);
-		t_token *repl = lexer_first_pass(t_char_to_char(replace_t_chars), env);
+		t_token *repl = lexer_first_pass(t_char_to_char(replace_t_chars));
 		free(replace_t_chars);
 		repl = lexer_second_pass(repl);
 

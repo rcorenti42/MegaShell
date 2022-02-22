@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   first_pass.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:01:34 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/16 14:01:21 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 22:13:35 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	pipe_proxy(t_token *head)
 	return (0);
 }
 
-t_token	*lexer_first_pass(char *str, t_env *env)
+t_token	*lexer_first_pass(char *str)
 {
 	int				pos;
 	t_char			*token;
@@ -127,7 +127,7 @@ t_token	*lexer_first_pass(char *str, t_env *env)
 	node = NULL;
 	token = NULL;
 	pos = 0;
-	while (pos < ft_strlen(str))
+	while ((size_t)pos < ft_strlen(str))
 	{
 		token = get_token(str, &pos);
 		if (token == NULL)

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 10:36:51 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 04:30:21 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_redir
 	int		out;
 	int		out_pipe;
 	int		out_fd;
+	int		pipe[2];
 }			t_redir;
 
 typedef struct s_shell
@@ -120,7 +121,7 @@ void		free_tokens(t_token *token);
 char		*find_env(char *str, char *var, int ret);
 
 //lexer_first_pass.c
-t_token	*lexer_first_pass(char *str, t_env *env);
+t_token	*lexer_first_pass(char *str);
 t_char		*get_token(char *str, int *pos);
 
 //utils.c
@@ -194,5 +195,7 @@ void    init_pipe(t_shell *shell);
 t_final_command *lexer_fill_final(t_command *cmd_head);
 void display_syntax_error(t_env *env);
 
+
+void    display_final(t_final_command *head);
 
 #endif

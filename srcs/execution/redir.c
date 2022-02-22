@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 08:28:44 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 04:39:57 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,9 @@ int	ft_pipe(t_shell *shell)
 			if (close(fd[0]) == -1)
 				return (-1);
 		}
-		if (dup2(fd[1], STDOUT))
+		if (dup2(fd[1], STDOUT) == -1)
 			return (-1);
+		shell->redir.pipe[1] = fd[1];
 		shell->redir.out_pipe = fd[1];
 		shell->redir.pid = -1;
 		shell->parent = 0;
@@ -84,6 +85,7 @@ int	ft_pipe(t_shell *shell)
 		if (dup2(fd[0], STDIN) == -1)
 			return (-1);
 		shell->redir.in_pipe = fd[0];
+		shell->redir.pipe[0] = fd[0];
 		return (2);
 	}
 }

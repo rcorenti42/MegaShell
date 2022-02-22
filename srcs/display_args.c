@@ -6,11 +6,13 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 10:41:33 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 10:42:55 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:46:19 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-display_args(char **args)
+#include "minishell.h"
+
+void    display_args(char **args)
 {
     int i;
 
