@@ -6,25 +6,24 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 04:39:57 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:38:51 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	error_redir(t_shell *shell, char *str)
+static void	error_redir(char *str)
 {
 	ft_putstr_fd("megashell: ", STDERR);
 	ft_putstr_fd(str, STDERR);
 	ft_putendl_fd(strerror(errno), STDERR);
-	shell->ret = 1;
+	g_signal = 1;
 }
 
-static int	ft_heredoc(t_shell *shell, t_final_command *cmd, char *str)
+static int	ft_heredoc(char *str)
 {
 	char	*line;
 	int		fd[2];
-	int		tmp;
 
 	pipe(fd);
 	while (1)
@@ -90,7 +89,7 @@ int	ft_pipe(t_shell *shell)
 	}
 }
 
-static int	ft_input(t_shell *shell, t_final_command *cmd, char *str)
+static int	ft_input(t_shell *shell, char *str)
 {
 	if (shell->redir.in_fd > 0)
 	{
@@ -114,12 +113,12 @@ int			redir(t_shell *shell, t_final_command *cmd)
 	{
 		if (cmd->redir_in[i].type == simple)
 		{
-			if (ft_input(shell, cmd, cmd->redir_in[i].redir) == ERROR)
+			if (ft_input(shell, cmd->redir_in[i].redir) == ERROR)
 				return (ERROR);
 		}
 		else
 		{
-			if (ft_heredoc(shell, cmd, cmd->redir_in[i].redir) == ERROR)
+			if (ft_heredoc(cmd->redir_in[i].redir) == ERROR)
 				return (ERROR);
 		}
 		i++;
@@ -138,7 +137,7 @@ int			redir(t_shell *shell, t_final_command *cmd)
 			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
 		if (shell->redir.out_fd == -1)
 		{
-			error_redir(shell, cmd->redir_out[i].redir);
+			error_redir(cmd->redir_out[i].redir);
 			return (ERROR);
 		}
 		if (dup2(shell->redir.out_fd, STDOUT) == -1)

@@ -6,13 +6,13 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/22 05:20:15 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 22:11:35 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+int g_signal;
 
 void	free_final(t_final_command *head)
 {
@@ -44,16 +44,15 @@ void	free_final(t_final_command *head)
 	}
 }
 
-static void	handler(int code)
+void	handler(int code)
 {
-	(void)code;
 	write(STDOUT, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
-static void	quit_handler(int code)
+void	quit_handler(int code)
 {
 	if (code == SIGQUIT)
 	{
@@ -67,7 +66,7 @@ static void	quit_handler(int code)
 	}
 }
 
-static int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
+int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 {
 	int	status;
 	int	i;
@@ -99,8 +98,8 @@ static int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 	if (WIFEXITED(status))
 	{
 		status = WEXITSTATUS(status);
-		if (!shell->ret)
-			shell->ret = status;
+		if (!g_signal)
+			g_signal = status;
 	}
 	shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
 	if (!shell->parent)
@@ -127,12 +126,12 @@ static int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 		close(STDIN);
 		close(STDOUT);
 		close(STDERR);
-		exit(shell->ret);
+		exit(g_signal);
 	}
 	return (SUCCESS);
 }
 
-static char	*ft_readline(void)
+char	*ft_readline(void)
 {
 	char	*ret;
 
@@ -158,8 +157,8 @@ int		main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	shell.ret = 0;
 	shell.exit = 0;
+	g_signal = 0;
 	shell.redir.in = dup(STDIN);
 	if (shell.redir.in == -1)
 		return (ERROR);
@@ -176,10 +175,8 @@ int		main(int ac, char **av, char **envp)
 		input = ft_readline();
 		if (ft_strcmp(input, ""))
 		{
-			shell.env->ret = shell.ret;
 			head = lexer(input, shell.env);	
 			//display_final(head);
-			shell.ret = shell.env->ret;
 			if (head != NULL)
 			{
 				if (minishell(&shell, shell.env, head) == ERROR)
@@ -203,5 +200,5 @@ int		main(int ac, char **av, char **envp)
 		if (close(shell.redir.out) == -1)
 			return (ERROR);
 	}
-	return (shell.ret);
+	return (g_signal);
 }

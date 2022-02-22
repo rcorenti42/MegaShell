@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 04:30:21 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:39:58 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+
+extern int g_signal;
 
 enum	e_type
 {
@@ -172,10 +174,10 @@ char	*get_val_env(char *arg, t_env *env);
 
 //BUILTINS
 void	ft_unset(t_shell *shell, t_final_command *cmd);
-int		ft_pwd(t_shell *shell);
+int		ft_pwd();
 int		ft_export(t_shell *shell, t_final_command *cmd);
 void	ft_env(t_shell *shell);
-void	ft_echo(t_shell *shell, t_final_command *cmd);
+void	ft_echo(t_final_command *cmd);
 int		ft_cd(t_shell *shell, t_final_command *cmd);
 void	ft_exit(t_shell *shell, t_final_command *cmd);
 int		is_builtin(t_final_command *cmd);
@@ -191,6 +193,9 @@ int	    init_std(t_shell *shell);
 void    init_redir(t_shell *shell);
 void	free_final(t_final_command *head);
 void    init_pipe(t_shell *shell);
+
+void	handler(int code);
+void	quit_handler(int code);
 
 t_final_command *lexer_fill_final(t_command *cmd_head);
 void display_syntax_error(t_env *env);

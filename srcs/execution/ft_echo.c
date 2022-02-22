@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:00:42 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 08:35:54 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:38:16 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,15 @@ static int	if_valid_n(char *str)
 	return (1);
 }
 
-void	ft_echo(t_shell *shell, t_final_command *cmd)
+void	ft_echo(t_final_command *cmd)
 {
 	int	i;
 	int	n;
+	int g_signal;
 
 	n = 0;
 	i = 1;
-	shell->ret = 0;
+	g_signal = 0;
 	while (cmd->args[i])
 	{
 		if (!if_valid_n(cmd->args[i]))

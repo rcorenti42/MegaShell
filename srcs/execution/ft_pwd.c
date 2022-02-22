@@ -6,17 +6,17 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:27:34 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 08:36:21 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:38:27 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(t_shell *shell)
+int	ft_pwd()
 {
 	char	*cwd;
 	
-	shell->ret = 0;
+	g_signal = 0;
 	cwd = (char *)malloc(sizeof(char) * (PATH_MAX + 5));
 	if (!cwd)
 		return (ERROR);
@@ -25,7 +25,7 @@ int	ft_pwd(t_shell *shell)
 		ft_putstr_fd("pwd: error retrieving current directory: getcwd: cannot access parent directories: ", STDERR);
 		ft_putendl_fd(strerror(errno), STDERR);
 		cwd = ft_memdel(cwd);
-		shell->ret = 1;
+		g_signal = 1;
 		return (SUCCESS);
 	}
 	ft_putendl_fd(cwd, STDOUT);

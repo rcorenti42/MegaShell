@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/05 04:45:16 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 08:36:13 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:37:40 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ void	ft_exit(t_shell *shell, t_final_command *cmd)
 			ft_putstr_fd("megashell: exit: ", STDERR);
 			ft_putstr_fd(cmd->args[1], STDERR);
 			ft_putendl_fd(": numeric argument required", STDERR);
-			shell->ret = 2;
+			g_signal = 2;
 		}
 		else if (cmd->args[2])
 		{
 			ft_putendl_fd("megashell: exit: too many arguments", STDERR);
-			shell->ret = 1;
+			g_signal = 1;
 			return ;
 		}
-		shell->ret = ft_atoi(cmd->args[1]);
+		g_signal = ft_atoi(cmd->args[1]);
 	}
 	shell->exit = 1;
 }

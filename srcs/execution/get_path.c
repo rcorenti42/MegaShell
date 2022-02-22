@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:47:51 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 07:57:31 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 21:57:14 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,13 @@ char	*get_path(t_shell *shell, t_final_command *cmd)
 		bin = ft_strdup(arg);
 		if (!bin)
 			return (NULL);
+		if (!access(bin, X_OK) && (bin[0] != '/' || bin[1]))
+			return (bin);
+		bin = ft_memdel(bin);
+		bin = ft_strdup("");
+		if (!bin)
+			return (NULL);
+		return (bin);
 	}
 	path = ft_memdel(path);
 	return (bin);

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 07:57:55 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 21:20:34 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	executor(t_shell *shell, t_final_command *cmd)
 {
 	if (!cmd->args[0])
-		return (ERROR);
+		return (SUCCESS);
 	else if (!ft_strcmp(cmd->args[0], "exit") && shell->redir.pipe_nbr == 0)
 		ft_exit(shell, cmd);
 	else if (is_builtin(cmd))
@@ -29,7 +29,10 @@ static int	executor(t_shell *shell, t_final_command *cmd)
 			return (ERROR);
 	}
 	else if (bin_exe(shell, cmd) == ERROR)
+	{
+		signal(SIGSEGV, SIG_DFL);
 		return (ERROR);
+	}
 	return (SUCCESS);
 }
 

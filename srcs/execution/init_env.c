@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 22:55:08 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 17:38:02 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 19:51:47 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,6 @@ int	init_env(t_shell *shell, char **envp)
 	env = (t_env *)malloc(sizeof(t_env));
 	if (!env)
 		return (ERROR);
-	if (!ft_strcmp(*envp, ""))
-	{
-		printf("yes !\n");
-		exit(0);
-	}
 	if (envp[0])
 	{
 		env->val = ft_strdup(envp[0]);
