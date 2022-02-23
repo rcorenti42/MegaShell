@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 04:01:39 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:31:24 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ static int	executor(t_shell *shell, t_final_command *cmd)
 			return (ERROR);
 	}
 	else if (bin_exe(shell, cmd) == ERROR)
-	{
-		signal(SIGSEGV, SIG_DFL);
 		return (ERROR);
-	}
 	return (SUCCESS);
 }
 

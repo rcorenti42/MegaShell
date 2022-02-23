@@ -6,11 +6,29 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 09:36:39 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:34:24 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	doc_handler(int code)
+{
+	(void)code;
+	g_signal = 130;
+
+		write(STDOUT, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		write(STDOUT, "\n", 1);
+		write(STDOUT, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		write(STDOUT, "\n", 1);
+
+}
 
 static void	error_redir(char *str)
 {
@@ -26,15 +44,23 @@ static int	ft_heredoc(char *str)
 	int		fd[2];
 
 	pipe(fd);
+	rl_outstream = stderr;
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &doc_handler);
 	while (1)
 	{
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, SIG_IGN);
 		line = readline("> ");
-		if (!ft_strcmp(line, str))
+		if (g_signal == 130)
+			break ;
+		if (!line)
+		{
+			ft_putstr_fd("bash: warning: here-document at line 1 delimited by end-of-file (wanted `", STDERR);
+			ft_putstr_fd(str, STDERR);
+			ft_putendl_fd("')", STDERR);
 			break;
-		signal(SIGQUIT, &quit_handler);
-		signal(SIGINT, &quit_handler);
+		}
+		if (!ft_strcmp(line, str))
+			break ;
 		ft_putendl_fd(line, fd[1]);
 		line = ft_memdel(line);
 	}

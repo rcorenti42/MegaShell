@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 04:28:41 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 19:51:44 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:01:19 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	*get_val_env(char *arg, t_env *env)
 	while (env->val[i] && env->val[i] != '=')
 		i++;
 	i++;
+	
 	ret = (char *)malloc(sizeof(char) * (ft_strlen(env->val) - i + 1));
 	if (!ret)
 		return (NULL);

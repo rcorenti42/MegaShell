@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 09:57:39 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:16:05 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ void	free_final(t_final_command *head)
 
 void	handler(int code)
 {
-	(void)code;
-	
 	if (code == SIGINT)
 	{
 		g_signal = 130;
@@ -66,11 +64,13 @@ void	quit_handler(int code)
 {
 	if (code == SIGQUIT)
 	{
+		g_signal = 131;
 		ft_putendl_fd("Quit (core dumped)", STDERR);
 		rl_redisplay();
 	}
 	if (code == SIGINT)
 	{
+		g_signal = 130;
 		write(STDOUT, "\n", 1);
 		rl_redisplay();
 	}
@@ -88,6 +88,8 @@ int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t) * shell->redir.pipe_nbr);
 	init_pipe(shell);
 	shell->parent = 1;
+	signal(SIGQUIT, &quit_handler);
+	signal(SIGINT, &quit_handler);
 	if (execution(shell, cmd) == ERROR)
 		return (ERROR);
 	close_redir(shell);
@@ -153,10 +155,7 @@ char	*ft_readline(void)
 	ret = readline(M E G A S H E X L _ " ");
 	if (!ret)
 		ret = ft_strdup("exit");
-	else if (ft_strcmp(ret, ""))
-		add_history(ret);
-	signal(SIGQUIT, &quit_handler);
-	signal(SIGINT, &quit_handler);
+	add_history(ret);
 	return (ret);
 }
 
