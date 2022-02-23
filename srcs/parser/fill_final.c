@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/17 04:42:28 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/18 13:24:14 by rcorenti         ###   ########.fr       */
+/*   Created: 2022/02/21 14:50:49 by sobouatt          #+#    #+#             */
+/*   Updated: 2022/02/23 01:00:39 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	get_tk_nb_tmp(t_token **command)
 
 int	get_redir_in_nb(t_token **command)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
@@ -59,8 +59,8 @@ int	get_redir_in_nb(t_token **command)
 		return (i);
 	while (command[i] != NULL)
 	{
-		if (command[i]->type == token_operand 
-			&& (ft_charcmp(command[i]->token, "<") == 0 
+		if (command[i]->type == token_operand
+			&& (ft_charcmp(command[i]->token, "<") == 0
 				|| ft_charcmp(command[i]->token, "<<") == 0))
 		{
 			j++;
@@ -79,8 +79,8 @@ int	get_redir_in_nb(t_token **command)
 
 int	get_redir_out_nb(t_token **command)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
@@ -88,8 +88,8 @@ int	get_redir_out_nb(t_token **command)
 		return (0);
 	while (command[i] != NULL)
 	{
-		if (command[i]->type == token_operand 
-			&& (ft_charcmp(command[i]->token, ">") == 0 
+		if (command[i]->type == token_operand
+			&& (ft_charcmp(command[i]->token, ">") == 0
 				|| ft_charcmp(command[i]->token, ">>") == 0))
 		{
 			j++;
@@ -103,7 +103,7 @@ int	get_redir_out_nb(t_token **command)
 		}
 		i++;
 	}
-	return (j);	
+	return (j);
 }
 
 char	*to_string(t_char *token)
@@ -122,13 +122,13 @@ char	*to_string(t_char *token)
 	return (str);
 }
 
-char **fill_args(t_token **command)
+char	**fill_args(t_token **command)
 {
-	char **args;
-	int ac;
-	int i;
-	int j;
-	
+	char	**args;
+	int		ac;
+	int		i;
+	int		j;
+
 	ac = get_tk_nb_tmp(command)
 		- (get_redir_in_nb(command) * 2 + get_redir_out_nb(command) * 2);
 	args = malloc(sizeof(char *) * (ac + 1));
@@ -146,13 +146,13 @@ char **fill_args(t_token **command)
 	return (args);
 }
 
-t_operand *fill_in(t_token **command)
+t_operand	*fill_in(t_token **command)
 {
-	t_operand *in;
-	int ac;
-	int i;
-	int j;
-	
+	t_operand	*in;
+	int			ac;
+	int			i;
+	int			j;
+
 	ac = get_redir_in_nb(command);
 	if (ac < 0)
 		return (NULL);
@@ -161,15 +161,15 @@ t_operand *fill_in(t_token **command)
 	j = 0;
 	while (command[i] != NULL)
 	{
-		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, "<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
+		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token,
+					"<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
 		{
 			if (ft_charcmp(command[i]->token, "<") == 0)
 				in[j].type = simple;
 			else
 				in[j].type = doubles;
 			i++;
-			in[j].redir = to_string(command[i]->token);
-			j++;
+			in[j++].redir = to_string(command[i]->token);
 		}
 		else
 			i++;
@@ -178,23 +178,23 @@ t_operand *fill_in(t_token **command)
 	return (in);
 }
 
-t_operand *fill_out(t_token **command)
+t_operand	*fill_out(t_token **command)
 {
-	t_operand *out;
-	int ac;
-	int i;
-	int j;
-	
+	t_operand	*out;
+	int			ac;
+	int			i;
+	int			j;
+
 	ac = get_redir_out_nb(command);
 	if (ac < 0)
 		return (NULL);
-	//printf("out_redir = %d\n", ac);
 	out = malloc(sizeof(t_operand) * (ac + 1));
 	i = 0;
 	j = 0;
 	while (command[i] != NULL)
 	{
-		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token, ">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
+		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token,
+					">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
 		{
 			if (ft_charcmp(command[i]->token, ">") == 0)
 				out[j].type = simple;
@@ -207,7 +207,6 @@ t_operand *fill_out(t_token **command)
 		else
 			i++;
 	}
-	//printf("j=%d\n", j);
 	out[j].redir = NULL;
 	return (out);
 }
@@ -217,7 +216,7 @@ t_final_command	*lexer_fill_final(t_command *cmd_head)
 	t_final_command	*final_head;
 	t_final_command	*final_tmp;
 	t_command		*cmd_tmp;
-	
+
 	cmd_tmp = cmd_head;
 	final_head = NULL;
 	while (cmd_tmp)

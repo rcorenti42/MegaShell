@@ -6,60 +6,11 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:57:28 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/20 04:09:24 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/22 05:52:16 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int		to_malloc(long n)
-{
-	int len;
-
-	len = 0;
-	if (n == 0)
-		return (1);
-	if (n < 0)
-	{
-		len++;
-		n = -n;
-	}
-	while (n > 0)
-	{
-		n = n / 10;
-		len++;
-	}
-	return (len);
-}
-
-char	*ft_itoa(int n)
-{
-	unsigned int	nb;
-	int				len;
-	char			*str;
-
-	nb = n < 0 ? -n : n;
-	len = to_malloc(n);
-	if (!(str = malloc(len * sizeof(char) + 1)))
-		return (NULL);
-	str[len--] = '\0';
-	if (n == 0)
-	{
-		str[0] = '0';
-		return (str);
-	}
-	if (n < 0)
-	{
-		str[0] = '-';
-		nb = n * -1;
-	}
-	while (nb > 0)
-	{
-		str[len--] = nb % 10 + 48;
-		nb = nb / 10;
-	}
-	return (str);
-}
 
 int	skip_spaces(char *str)
 {
@@ -110,11 +61,9 @@ int	get_token_size(char *str, int pos)
 
 	token_size = pos;
 	quote = 0;
-	if ((ft_strncmp(str + pos, ">>", 2) == 0) || ft_strncmp(str + pos, "<<", 2) == 0)
-	{
-	//	printf("strncmp in gts\n");
+	if ((ft_strncmp(str + pos, ">>", 2) == 0)
+		|| ft_strncmp(str + pos, "<<", 2) == 0)
 		return (2);
-	}
 	if (str[pos] == '|' || str[pos] == '<' || str[pos] == '>')
 		return (1);
 	while (str[pos] != '\0')

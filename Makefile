@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+         #
+#    By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/22 20:54:17 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/22 05:34:20 by sobouatt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,12 +29,15 @@ SRCS2 = lexer.c \
 	list.c \
 	list2.c \
 	first_pass.c \
+	first_pass2.c \
 	second_pass.c \
 	expand.c \
+	expand_unquoted.c \
 	expand_utils.c \
 	remove_quotes.c \
 	split_cmd.c \
 	fill_final.c \
+	ft_itoa.c
 
 SRCS3 = redir.c \
 	fd.c \
@@ -60,7 +63,7 @@ LIBFT = libft/libft.a
 
 CC = clang
 
-CFLAGS = -g3 -Wall -Wextra -Werror# -fsanitize=address
+CFLAGS = -g3 # -Wall -Wextra -Werror -fsanitize=address
 
 OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
 

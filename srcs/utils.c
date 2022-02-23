@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:14:37 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 05:34:56 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 00:58:13 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,10 @@ int	count_pipes(t_final_command *cmd)
 	return (ret - 1);
 }
 
-void	display_syntax_error(t_env *env)
+void	*display_syntax_error(t_env *env)
 {
 	write(2, "megashell: syntax error\n",
 		ft_strlen("megashell: syntax error\n"));
 	env->ret = 2;
+	return (NULL);
 }

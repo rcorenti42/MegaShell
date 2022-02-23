@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/22 22:11:35 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 01:25:09 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,16 @@ void	free_final(t_final_command *head)
 
 void	handler(int code)
 {
-	write(STDOUT, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	(void)code;
+	
+	if (code == SIGINT)
+	{
+		g_signal = 130;
+		write(STDOUT, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 void	quit_handler(int code)
@@ -98,7 +104,7 @@ int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 	if (WIFEXITED(status))
 	{
 		status = WEXITSTATUS(status);
-		if (!g_signal)
+		if (g_signal == 0)
 			g_signal = status;
 	}
 	shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
@@ -175,7 +181,11 @@ int		main(int ac, char **av, char **envp)
 		input = ft_readline();
 		if (ft_strcmp(input, ""))
 		{
-			head = lexer(input, shell.env);	
+			shell.env->ret = g_signal;
+			g_signal = 0;
+			head = lexer(input, shell.env);
+			if (shell.env->ret != 0)
+				g_signal = shell.env->ret;	
 			//display_final(head);
 			if (head != NULL)
 			{

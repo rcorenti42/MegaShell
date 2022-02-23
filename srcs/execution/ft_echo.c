@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 17:00:42 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 20:38:16 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 01:12:43 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	ft_echo(t_final_command *cmd)
 {
 	int	i;
 	int	n;
-	int g_signal;
 
 	n = 0;
 	i = 1;

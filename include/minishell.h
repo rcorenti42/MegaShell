@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 20:39:58 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 01:12:30 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <string.h>
 # include <errno.h>
 # include <limits.h>
+#include <string.h>
 
 # define SUCCESS 0
 # define ERROR 1
@@ -123,8 +124,8 @@ void		free_tokens(t_token *token);
 char		*find_env(char *str, char *var, int ret);
 
 //lexer_first_pass.c
-t_token	*lexer_first_pass(char *str);
-t_char		*get_token(char *str, int *pos);
+t_token	*lexer_first_pass(char *str, t_env *env);
+t_char		*get_token(char *str, size_t *pos);
 
 //utils.c
 int	char_len(t_char *str);
@@ -174,7 +175,7 @@ char	*get_val_env(char *arg, t_env *env);
 
 //BUILTINS
 void	ft_unset(t_shell *shell, t_final_command *cmd);
-int		ft_pwd();
+int		ft_pwd(t_shell *shell);
 int		ft_export(t_shell *shell, t_final_command *cmd);
 void	ft_env(t_shell *shell);
 void	ft_echo(t_final_command *cmd);
@@ -194,13 +195,22 @@ void    init_redir(t_shell *shell);
 void	free_final(t_final_command *head);
 void    init_pipe(t_shell *shell);
 
-void	handler(int code);
-void	quit_handler(int code);
-
 t_final_command *lexer_fill_final(t_command *cmd_head);
-void display_syntax_error(t_env *env);
+void	*display_syntax_error(t_env *env);
 
 
 void    display_final(t_final_command *head);
+int	expand(t_command *cmd, size_t pos, t_char *word, t_env *env);
+
+
+t_char	*expand_quoted(t_char *tk, t_char *word, t_env *env);
+char	*t_char_to_char(t_char *t_chars);
+void	fill_expanded(t_char *new, t_char *tk, t_char *word, char *exp);
+
+t_char	*treat_pipe(size_t *pos, t_char *token);
+enum e_type	get_token_type(t_char *str);
+int	ft_charcmp(t_char *s1, const char *s2);
+
+char	*ft_itoa(int nb);
 
 #endif

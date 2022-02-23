@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 18:35:54 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 20:38:12 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/22 23:47:00 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ int	ft_cd(t_shell *shell, t_final_command *cmd)
 	{
 		str = get_val_env("HOME", env);
 		if (!str)
+			ret = ERROR;
+		else if (!ft_strcmp(str, ""))
 		{
 			g_signal = 1;
 			ft_putendl_fd("megashell: cd: HOME not set", STDERR);
 		}
-		else if (!ft_strcmp(str, ""))
-			ret = ERROR;
 		else
 		{
 			if (chdir(str) == -1)
@@ -46,8 +46,8 @@ int	ft_cd(t_shell *shell, t_final_command *cmd)
 				g_signal = 1;
 				ft_error_cd(str);
 			}
+			str = ft_memdel(str);
 		}
-		str = ft_memdel(str);
 	}
 	else
 	{
