@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 20:38:51 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 09:36:39 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,13 @@ static int	ft_heredoc(char *str)
 	pipe(fd);
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, SIG_IGN);
 		line = readline("> ");
 		if (!ft_strcmp(line, str))
 			break;
+		signal(SIGQUIT, &quit_handler);
+		signal(SIGINT, &quit_handler);
 		ft_putendl_fd(line, fd[1]);
 		line = ft_memdel(line);
 	}

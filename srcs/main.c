@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 04:12:45 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 09:57:39 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,32 @@ void	free_final(t_final_command *head)
 	t_final_command *tmp;
 	int i;
 
-	i = 0;
-	tmp = head;
 	while (head)
 	{
 		i = 0;
 		tmp = head;
-		if (head->args != NULL)
-			while (head->args[i] != NULL)
-				free(head->args[i++]);
+		while (head->args && head->args[i])
+		{
+			head->args[i] = ft_memdel(head->args[i]);
+			i++;
+		}
 		i = 0;
-		if (head->redir_in != NULL)
-			while (head->redir_in[i].redir != NULL)
-				free(head->redir_in[i++].redir);
+		while (head->redir_in && head->redir_in[i].redir)
+		{
+			head->redir_in[i].redir = ft_memdel(head->redir_in[i].redir);
+			i++;
+		}
 		i = 0;
-		if (head->redir_out != NULL)
-			while (head->redir_out[i].redir != NULL)
-				free(head->redir_out[i++].redir);
-		free(head->redir_in);
-		free(head->redir_out);
-		free(head->args);
+		while (head->redir_out && head->redir_out[i].redir)
+		{
+			head->redir_out[i].redir = ft_memdel(head->redir_out[i].redir);
+			i++;
+		}
+		head->redir_in = ft_memdel(head->redir_in);
+		head->redir_out = ft_memdel(head->redir_out);
+		head->args = ft_memdel(head->args);
 		head = head->next;
-		free(tmp);
+		tmp = ft_memdel(tmp);
 	}
 }
 
@@ -187,13 +191,9 @@ int		main(int ac, char **av, char **envp)
 			head = lexer(input, shell.env);
 			if (shell.env->ret != 0)
 				g_signal = shell.env->ret;	
-			//display_final(head);
 			if (head != NULL)
-			{
-				if (minishell(&shell, shell.env, head) == ERROR)
-					return (ERROR);
-				free_final(head);
-			}
+				minishell(&shell, shell.env, head);
+			free_final(head);
 		}
 		input = ft_memdel(input);
 	}

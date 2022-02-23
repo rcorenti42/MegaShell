@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 01:32:43 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 09:34:18 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,8 @@ int	    init_std(t_shell *shell);
 void    init_redir(t_shell *shell);
 void	free_final(t_final_command *head);
 void    init_pipe(t_shell *shell);
+void	handler(int code);
+void	quit_handler(int code);
 
 t_final_command *lexer_fill_final(t_command *cmd_head);
 void	*display_syntax_error(t_env *env);

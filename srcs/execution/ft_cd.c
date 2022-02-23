@@ -6,18 +6,24 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 18:35:54 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 23:47:00 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 07:52:59 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_error_cd(char *str)
+static void	ft_error_cd(char *str, int index)
 {
-	ft_putstr_fd("megashell: cd: ", STDERR);
-	ft_putstr_fd(str, STDERR);
-	ft_putstr_fd(": ", STDERR);
-	ft_putendl_fd(strerror(errno), STDERR);
+	g_signal = 1;
+	if (index == 1)
+	{
+		ft_putstr_fd("megashell: cd: ", STDERR);
+		ft_putstr_fd(str, STDERR);
+		ft_putstr_fd(": ", STDERR);
+		ft_putendl_fd(strerror(errno), STDERR);
+	}
+	else
+		ft_putendl_fd("megashell: cd: HOME not set", STDERR);
 }
 
 int	ft_cd(t_shell *shell, t_final_command *cmd)
@@ -35,27 +41,16 @@ int	ft_cd(t_shell *shell, t_final_command *cmd)
 		if (!str)
 			ret = ERROR;
 		else if (!ft_strcmp(str, ""))
-		{
-			g_signal = 1;
-			ft_putendl_fd("megashell: cd: HOME not set", STDERR);
-		}
+			ft_error_cd(NULL, 2);
 		else
 		{
 			if (chdir(str) == -1)
-			{
-				g_signal = 1;
-				ft_error_cd(str);
-			}
+				ft_error_cd(str, 1);
 			str = ft_memdel(str);
 		}
 	}
 	else
-	{
 		if (chdir(cmd->args[1]) == -1)
-		{
-			g_signal = 1;
-			ft_error_cd(cmd->args[1]);
-		}
-	}
+			ft_error_cd(cmd->args[1], 1);
 	return (ret);
 }

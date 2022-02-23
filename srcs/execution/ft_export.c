@@ -6,11 +6,20 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 23:46:10 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 03:22:27 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 08:09:49 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	return_export(char *str)
+{
+	g_signal = 1;
+	ft_putstr_fd("megashell: export: `", STDERR);
+	ft_putstr_fd(str, STDERR);
+	ft_putendl_fd("': not a valid identifier", STDERR);
+	return (SUCCESS);
+}
 
 static int	error_export(char *name)
 {
@@ -84,15 +93,12 @@ static int	is_in_env(char *str, t_env *env)
 			return (-1);
 		name = ft_name_env(str, name);
 		if (!error_export(name))
-		{
-			name = ft_memdel(name);
-			return (1);
-		}
-		if (!ft_strncmp(name, env->val, ft_strlen(name)) && (env->val[ft_strlen(name)] == '=' || !env->val[ft_strlen(name)]))
+			i = 1;
+		else if (!ft_strncmp(name, env->val, ft_strlen(name))
+			&& (env->val[ft_strlen(name)] == '=' || !env->val[ft_strlen(name)]))
 		{
 			env->val = ft_memdel(env->val);
 			env->val = ft_strdup(str);
-			name = ft_memdel(name);
 			i = 2;
 		}
 		name = ft_memdel(name);
@@ -123,13 +129,7 @@ int	ft_export(t_shell *shell, t_final_command *cmd)
 		else if (status == -1)
 			return (ERROR);
 		else if (status == 1)
-		{
-			ft_putstr_fd("megashell: export: `", STDERR);
-			ft_putstr_fd(cmd->args[i], STDERR);
-			ft_putendl_fd("': not a valid identifier", STDERR);
-			g_signal = 1;
-			return (SUCCESS);
-		}
+			return (return_export(cmd->args[i]));
 		i++;
 	}
 	return (SUCCESS);
