@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 23:46:10 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 20:38:24 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 03:22:27 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,12 @@ static int	is_in_env(char *str, t_env *env)
 			name = ft_memdel(name);
 			return (1);
 		}
-		if (!ft_strncmp(name, env->val, ft_strlen(name)) && env->val[ft_strlen(name)] == '=')
+		if (!ft_strncmp(name, env->val, ft_strlen(name)) && (env->val[ft_strlen(name)] == '=' || !env->val[ft_strlen(name)]))
 		{
-			i = 2;
 			env->val = ft_memdel(env->val);
 			env->val = ft_strdup(str);
 			name = ft_memdel(name);
-			break ;
+			i = 2;
 		}
 		name = ft_memdel(name);
 		env = env->next;

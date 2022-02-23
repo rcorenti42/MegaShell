@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 02:43:57 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 04:12:45 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 	int	i;
 
 	i = -1;
+	shell->redir.i_pipe = -1;
 	status = 0;
 	shell->redir.pipe_nbr = count_pipes(cmd);
 	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t) * shell->redir.pipe_nbr);

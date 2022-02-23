@@ -6,7 +6,7 @@
 #    By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/22 05:34:20 by sobouatt         ###   ########.fr        #
+#    Updated: 2022/02/23 04:17:31 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ LIBFT = libft/libft.a
 
 CC = clang
 
-CFLAGS = -g3 # -Wall -Wextra -Werror -fsanitize=address
+CFLAGS = -g3 -Wall -Wextra -Werror# -fsanitize=address
 
 OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
 
