@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 01:12:30 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 01:32:43 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ char	*get_val_env(char *arg, t_env *env);
 
 //BUILTINS
 void	ft_unset(t_shell *shell, t_final_command *cmd);
-int		ft_pwd(t_shell *shell);
+int		ft_pwd();
 int		ft_export(t_shell *shell, t_final_command *cmd);
 void	ft_env(t_shell *shell);
 void	ft_echo(t_final_command *cmd);
