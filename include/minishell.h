@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 09:34:18 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 22:22:47 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,10 @@ t_char		*get_token(char *str, size_t *pos);
 //utils.c
 int	char_len(t_char *str);
 int	count_pipes(t_final_command *cmd);
+void	*display_syntax_error(t_env *env);
+int	count_pipes(t_final_command *cmd);
+void	free_tab(char **tab);
+void	free_env(t_env *env);
 
 //list.c
 t_token		*ft_lstnew(t_char *token, enum e_type type);
@@ -167,11 +171,14 @@ int		redir(t_shell *shell, t_final_command *cmd);
 int	bin_exe(t_shell *shell, t_final_command *cmd);
 int	bin_exe_fork(t_shell *shell, t_final_command *cmd);
 int	ft_pipe(t_shell *shell);
-
+int	heredoc_loop(char *line, char *str);
+int	ft_heredoc(char *str);
 
 //ENV
 int		init_env(t_shell *shell, char **envp);
 char	*get_val_env(char *arg, t_env *env);
+char	*ft_name_env(char *str, char *name);
+int		ft_size_env(char *str);
 
 //BUILTINS
 void	ft_unset(t_shell *shell, t_final_command *cmd);

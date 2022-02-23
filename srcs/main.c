@@ -6,40 +6,31 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 14:16:05 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 22:33:54 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_signal;
+int	g_signal;
 
 void	free_final(t_final_command *head)
 {
-	t_final_command *tmp;
-	int i;
+	t_final_command	*tmp;
+	int				i;
 
 	while (head)
 	{
-		i = 0;
+		i = -1;
 		tmp = head;
-		while (head->args && head->args[i])
-		{
+		while (head->args && head->args[++i])
 			head->args[i] = ft_memdel(head->args[i]);
-			i++;
-		}
-		i = 0;
-		while (head->redir_in && head->redir_in[i].redir)
-		{
+		i = -1;
+		while (head->redir_in && head->redir_in[++i].redir)
 			head->redir_in[i].redir = ft_memdel(head->redir_in[i].redir);
-			i++;
-		}
-		i = 0;
-		while (head->redir_out && head->redir_out[i].redir)
-		{
+		i = -1;
+		while (head->redir_out && head->redir_out[++i].redir)
 			head->redir_out[i].redir = ft_memdel(head->redir_out[i].redir);
-			i++;
-		}
 		head->redir_in = ft_memdel(head->redir_in);
 		head->redir_out = ft_memdel(head->redir_out);
 		head->args = ft_memdel(head->args);
@@ -85,7 +76,8 @@ int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 	shell->redir.i_pipe = -1;
 	status = 0;
 	shell->redir.pipe_nbr = count_pipes(cmd);
-	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t) * shell->redir.pipe_nbr);
+	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t)
+			*shell->redir.pipe_nbr);
 	init_pipe(shell);
 	shell->parent = 1;
 	signal(SIGQUIT, &quit_handler);
@@ -159,11 +151,11 @@ char	*ft_readline(void)
 	return (ret);
 }
 
-int		main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
 	t_final_command	*head;
-	char		*input;
-	t_shell		shell;
+	char			*input;
+	t_shell			shell;
 
 	(void)ac;
 	(void)av;
@@ -189,7 +181,7 @@ int		main(int ac, char **av, char **envp)
 			g_signal = 0;
 			head = lexer(input, shell.env);
 			if (shell.env->ret != 0)
-				g_signal = shell.env->ret;	
+				g_signal = shell.env->ret;
 			if (head != NULL)
 				minishell(&shell, shell.env, head);
 			free_final(head);

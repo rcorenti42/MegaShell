@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 23:46:10 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 08:09:49 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 20:17:07 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,6 @@ static int	error_export(char *name)
 			return (0);
 	}
 	return (1);
-}
-
-static int	ft_size_env(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	i++;
-	return (i);
-}
-
-static char	*ft_name_env(char *str, char *name)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-	{
-		name[i] = str[i];
-		i++;
-	}
-	name[i] = '\0';
-	return (name);
 }
 
 static int	add_env(char *str, t_env *env)

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 16:25:06 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 22:09:05 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,66 +20,18 @@ static void	error_redir(char *str)
 	g_signal = 1;
 }
 
-static int	ft_heredoc(char *str)
-{
-	char	*line;
-	int		fd[2];
-
-	pipe(fd);
-	rl_outstream = stderr;
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, &handler);
-	while (1)
-	{
-		line = readline("> ");
-		if (g_signal == 130)
-			break ;
-		if (!line)
-		{
-			ft_putstr_fd("bash: warning: here-document at ", STDERR);
-			ft_putstr_fd("line 1 delimited by end-of-file (wanted `", STDERR);
-			ft_putstr_fd(str, STDERR);
-			ft_putendl_fd("')", STDERR);
-			break ;
-		}
-		if (!ft_strcmp(line, str))
-			break ;
-		ft_putendl_fd(line, fd[1]);
-		line = ft_memdel(line);
-	}
-	line = ft_memdel(line);
-	if (dup2(fd[0], STDIN) == -1)
-		return (ERROR);
-	if (fd[0] > 0)
-	{
-		if (close(fd[0]) == -1)
-			return (ERROR);
-	}
-	if (fd[1] > 0)
-	{
-		if (close(fd[1]) == -1)
-			return (ERROR);
-	}
-	return (SUCCESS);
-}
-
 int	ft_pipe(t_shell *shell)
 {
 	int		fd[2];
 
 	pipe(fd);
-	(shell->redir.i_pipe)++;
-	(shell->redir.pid_pipe)[shell->redir.i_pipe] = fork();
+	(shell->redir.pid_pipe)[++shell->redir.i_pipe] = fork();
 	if (shell->redir.pid_pipe[shell->redir.i_pipe] == -1)
 		return (-1);
 	else if (shell->redir.pid_pipe[shell->redir.i_pipe] == 0)
 	{
-		if (fd[0] > 0)
-		{
-			if (close(fd[0]) == -1)
-				return (-1);
-		}
-		if (dup2(fd[1], STDOUT) == -1)
+		if ((fd[0] > 0 && close(fd[0]) == -1)
+			|| dup2(fd[1], STDOUT) == -1)
 			return (-1);
 		shell->redir.pipe[1] = fd[1];
 		shell->redir.out_pipe = fd[1];
@@ -89,12 +41,7 @@ int	ft_pipe(t_shell *shell)
 	}
 	else
 	{
-		if (fd[1] > 0)
-		{
-			if (close(fd[1]) == -1)
-				return (-1);
-		}
-		if (dup2(fd[0], STDIN) == -1)
+		if ((fd[1] > 0 && close(fd[1]) == -1) || (dup2(fd[0], STDIN) == -1))
 			return (-1);
 		shell->redir.in_pipe = fd[0];
 		shell->redir.pipe[0] = fd[0];
@@ -117,6 +64,35 @@ static int	ft_input(t_shell *shell, char *str)
 	return (SUCCESS);
 }
 
+static int	out_redir(t_shell *shell, t_final_command *cmd)
+{
+	int	i;
+
+	i = -1;
+	while (cmd->redir_out[++i].redir)
+	{
+		if (shell->redir.out_fd > 0)
+			if (close(shell->redir.out_fd) == -1)
+				return (ERROR);
+		if (cmd->redir_out[i].type == simple)
+			shell->redir.out_fd = open(cmd->redir_out[i].redir,
+					O_CREAT | O_WRONLY | O_TRUNC,
+					S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+		else
+			shell->redir.out_fd = open(cmd->redir_out[i].redir,
+					O_CREAT | O_WRONLY | O_APPEND,
+					S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+		if (shell->redir.out_fd == -1)
+		{
+			error_redir(cmd->redir_out[i].redir);
+			return (ERROR);
+		}
+		if (dup2(shell->redir.out_fd, STDOUT) == -1)
+			return (ERROR);
+	}
+	return (SUCCESS);
+}
+
 int	redir(t_shell *shell, t_final_command *cmd)
 {
 	int		i;
@@ -136,28 +112,5 @@ int	redir(t_shell *shell, t_final_command *cmd)
 		}
 		i++;
 	}
-	i = 0;
-	while (cmd->redir_out[i].redir)
-	{
-		if (shell->redir.out_fd > 0)
-		{	
-			if (close(shell->redir.out_fd) == -1)
-				return (ERROR);
-		}
-		if (cmd->redir_out[i].type == simple)
-			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT
-					| O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-		else
-			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT
-					| O_WRONLY | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-		if (shell->redir.out_fd == -1)
-		{
-			error_redir(cmd->redir_out[i].redir);
-			return (ERROR);
-		}
-		if (dup2(shell->redir.out_fd, STDOUT) == -1)
-			return (ERROR);
-		i++;
-	}
-	return (SUCCESS);
+	return (out_redir(shell, cmd));
 }

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:52:10 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 01:05:34 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 16:38:45 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ t_final_command	*lexer(char *str, t_env *env)
 	t_command		*cmd_head;
 	t_final_command	*final_head;
 
-	//printf("Salut\n");
-	//return (NULL);
 	if (proxy(str) != 0)
 		return (display_syntax_error(env));
 	tk_head = lexer_first_pass(str, env);

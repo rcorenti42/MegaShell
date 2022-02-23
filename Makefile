@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+         #
+#    By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/23 04:17:31 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/23 22:32:30 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ EXEC = execution
 
 SRCS1 = main.c \
 	utils.c \
+	utils_two.c \
 	display_args.c \
 
 SRCS2 = lexer.c \
@@ -37,7 +38,7 @@ SRCS2 = lexer.c \
 	remove_quotes.c \
 	split_cmd.c \
 	fill_final.c \
-	ft_itoa.c
+	ft_itoa.c \
 
 SRCS3 = redir.c \
 	fd.c \
@@ -54,6 +55,8 @@ SRCS3 = redir.c \
 	get_val_env.c \
 	get_path.c \
 	execution.c \
+	ft_export_utils.c \
+	heredoc.c \
 
 PARS = ${addsuffix /parser,${SRCS}}
 
@@ -63,8 +66,8 @@ LIBFT = libft/libft.a
 
 CC = clang
 
-CFLAGS = -g3 -Wall -Wextra -Werror# -fsanitize=address
-
+CFLAGS = -fsanitize=address -g3# -Wall -Wextra -Werror
+ 
 OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
 
 .c.o:

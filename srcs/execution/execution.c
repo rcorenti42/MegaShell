@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 10:31:24 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 17:15:14 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,21 @@ static int	executor(t_shell *shell, t_final_command *cmd)
 	return (SUCCESS);
 }
 
-int		execution(t_shell *shell, t_final_command *cmd)
+static int	exec_error(t_shell *shell, t_final_command *cmd, int child)
+{
+	if (redir(shell, cmd) == ERROR)
+		return (ERROR);
+	if (child == 2)
+	{
+		if (execution(shell, cmd->next) == ERROR)
+			return (ERROR);
+	}
+	else if (executor(shell, cmd) == ERROR)
+		return (ERROR);
+	return (SUCCESS);
+}
+
+int	execution(t_shell *shell, t_final_command *cmd)
 {
 	int	child;
 
@@ -56,14 +70,5 @@ int		execution(t_shell *shell, t_final_command *cmd)
 		if (child < 0)
 			return (ERROR);
 	}
-	if (redir(shell, cmd) == ERROR)
-		return (ERROR);
-	if (child == 2)
-	{
-		if (execution(shell, cmd->next) == ERROR)
-			return (ERROR);
-	}
-	else if (executor(shell, cmd) == ERROR)
-		return (ERROR);
-	return (SUCCESS);
+	return (exec_error(shell, cmd, child));
 }
