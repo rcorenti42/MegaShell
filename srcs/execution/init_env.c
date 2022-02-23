@@ -6,39 +6,18 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 22:55:08 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 23:38:56 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 15:13:29 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	init_env(t_shell *shell, char **envp)
+static int	init_env_new(t_shell *shell, t_env *env, char **envp)
 {
 	int		i;
-	t_env	*env;
 	t_env	*new;
 
 	i = 1;
-	if (!envp)
-		return (ERROR);
-	env = (t_env *)malloc(sizeof(t_env));
-	if (!env)
-		return (ERROR);
-	if (envp[0])
-	{
-		env->val = ft_strdup(envp[0]);
-		if (!env->val)
-				return (ERROR);
-	}
-	if (!envp[0])
-	{
-		env->val = (char *)malloc(sizeof(char));
-		if (!env->val)
-			return (ERROR);
-		env->next = NULL;
-		shell->env = env;
-		return (SUCCESS);
-	}
 	env->next = NULL;
 	shell->env = env;
 	while (envp[i])
@@ -55,4 +34,31 @@ int	init_env(t_shell *shell, char **envp)
 		i++;
 	}
 	return (SUCCESS);
+}
+
+int	init_env(t_shell *shell, char **envp)
+{
+	t_env	*env;
+
+	if (!envp)
+		return (ERROR);
+	env = (t_env *)malloc(sizeof(t_env));
+	if (!env)
+		return (ERROR);
+	if (envp[0])
+	{
+		env->val = ft_strdup(envp[0]);
+		if (!env->val)
+			return (ERROR);
+	}
+	if (!envp[0])
+	{
+		env->val = (char *)malloc(sizeof(char));
+		if (!env->val)
+			return (ERROR);
+		env->next = NULL;
+		shell->env = env;
+		return (SUCCESS);
+	}
+	return (init_env_new(shell, env, envp));
 }

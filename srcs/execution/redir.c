@@ -6,29 +6,11 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 13:34:24 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/23 16:25:06 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	doc_handler(int code)
-{
-	(void)code;
-	g_signal = 130;
-
-		write(STDOUT, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		write(STDOUT, "\n", 1);
-		write(STDOUT, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		write(STDOUT, "\n", 1);
-
-}
 
 static void	error_redir(char *str)
 {
@@ -46,7 +28,7 @@ static int	ft_heredoc(char *str)
 	pipe(fd);
 	rl_outstream = stderr;
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, &doc_handler);
+	signal(SIGINT, &handler);
 	while (1)
 	{
 		line = readline("> ");
@@ -54,10 +36,11 @@ static int	ft_heredoc(char *str)
 			break ;
 		if (!line)
 		{
-			ft_putstr_fd("bash: warning: here-document at line 1 delimited by end-of-file (wanted `", STDERR);
+			ft_putstr_fd("bash: warning: here-document at ", STDERR);
+			ft_putstr_fd("line 1 delimited by end-of-file (wanted `", STDERR);
 			ft_putstr_fd(str, STDERR);
 			ft_putendl_fd("')", STDERR);
-			break;
+			break ;
 		}
 		if (!ft_strcmp(line, str))
 			break ;
@@ -126,7 +109,7 @@ static int	ft_input(t_shell *shell, char *str)
 		if (close(shell->redir.in_fd) == -1)
 			return (ERROR);
 	}
-	shell->redir.in_fd = open(str, O_RDONLY, S_IRWXU);
+	shell->redir.in_fd = open(str, O_RDONLY);
 	if (shell->redir.in_fd == -1)
 		return (SUCCESS);
 	if (dup2(shell->redir.in_fd, STDIN) == -1)
@@ -134,7 +117,7 @@ static int	ft_input(t_shell *shell, char *str)
 	return (SUCCESS);
 }
 
-int			redir(t_shell *shell, t_final_command *cmd)
+int	redir(t_shell *shell, t_final_command *cmd)
 {
 	int		i;
 
@@ -162,9 +145,11 @@ int			redir(t_shell *shell, t_final_command *cmd)
 				return (ERROR);
 		}
 		if (cmd->redir_out[i].type == simple)
-			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT
+					| O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		else
-			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
+			shell->redir.out_fd = open(cmd->redir_out[i].redir, O_CREAT
+					| O_WRONLY | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		if (shell->redir.out_fd == -1)
 		{
 			error_redir(cmd->redir_out[i].redir);
