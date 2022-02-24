@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:14:37 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 22:52:55 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 07:30:10 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,10 @@ char	**tenv_to_tab(t_env *env)
 		ret[i] = (char *)malloc(sizeof(char) * (ft_strlen(env->val) + 1));
 		if (!ret[i])
 			return (NULL);
-		j = 0;
-		while (env->val[j])
-		{
+		j = -1;
+		while (env->val[++j])
 			ret[i][j] = env->val[j];
-			j++;
-		}
-		ret[i][j] = '\0';
-		i++;
+		ret[i++][j] = '\0';
 		env = env->next;
 	}
 	ret[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 17:15:14 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 09:16:08 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	exec_error(t_shell *shell, t_final_command *cmd, int child)
 	return (SUCCESS);
 }
 
-int	execution(t_shell *shell, t_final_command *cmd)
+int	(t_shell *shell, t_final_command *cmd)
 {
 	int	child;
 

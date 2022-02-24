@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:14:37 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 22:14:11 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 04:34:27 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	free_env(t_env *env)
 	{
 		while (env)
 		{
-			env->val = ft_memdel(env->val);
+			if (env->val)
+				env->val = ft_memdel(env->val);
 			tmp = env->next;
 			env = ft_memdel(env);
 			env = tmp;

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 22:33:54 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 08:53:06 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,19 @@ void	free_final(t_final_command *head)
 	}
 }
 
+static int	ft_free_exit(t_shell *shell)
+{
+	close_redir(shell);
+	init_redir(shell);
+	close(STDIN);
+	close(STDOUT);
+	close(STDERR);
+	clear_history();
+	free_env(shell->env);
+	perror("Error : ");
+	return (ERROR);
+}
+
 void	handler(int code)
 {
 	if (code == SIGINT)
@@ -67,28 +80,35 @@ void	quit_handler(int code)
 	}
 }
 
-int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
+static void	close_child(t_shell *shell, t_env *env, t_final_command *cmd)
 {
-	int	status;
+	if (!shell->parent)
+	{
+		close(STDIN);
+		close(STDOUT);
+		if (shell->redir.in > 0)
+			close(shell->redir.in);
+		if (shell->redir.out > 0)
+			close(shell->redir.out);
+		free_env(env);
+		free_final(cmd);
+		close_redir(shell);
+		init_redir(shell);
+		clear_history();
+		close(STDIN);
+		close(STDOUT);
+		close(STDERR);
+		exit(g_signal);
+	}
+}
+
+static int	ft_father(t_shell *shell)
+{
 	int	i;
+	int	status;
 
 	i = -1;
-	shell->redir.i_pipe = -1;
 	status = 0;
-	shell->redir.pipe_nbr = count_pipes(cmd);
-	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t)
-			*shell->redir.pipe_nbr);
-	init_pipe(shell);
-	shell->parent = 1;
-	signal(SIGQUIT, &quit_handler);
-	signal(SIGINT, &quit_handler);
-	if (execution(shell, cmd) == ERROR)
-		return (ERROR);
-	close_redir(shell);
-	init_redir(shell);
-	init_pipe(shell);
-	if (init_std(shell) == ERROR)
-		return (ERROR);
 	if (shell->parent)
 	{
 		while (i < shell->redir.i_pipe)
@@ -106,33 +126,42 @@ int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 		if (g_signal == 0)
 			g_signal = status;
 	}
+	return (SUCCESS);
+}
+
+int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
+{
+	shell->redir.i_pipe = -1;
+	shell->redir.pipe_nbr = count_pipes(cmd);
+	shell->redir.pid_pipe = (pid_t *)malloc(sizeof(pid_t)
+			* shell->redir.pipe_nbr + 1);
+	if (!shell->redir.pid_pipe)
+		return (ERROR);
+	init_pipe(shell);
+	shell->parent = 1;
+	signal(SIGQUIT, &quit_handler);
+	signal(SIGINT, &quit_handler);
+	if (execution(shell, cmd) == ERROR)
+	{
+		shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
+		return (ERROR);
+	}
+	close_redir(shell);
+	init_redir(shell);
+	init_pipe(shell);
+	if (init_std(shell) == ERROR)
+	{
+		shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe); // l'attribution ne fais rien
+		return (ERROR);
+	}
+	if (ft_father(shell) == ERROR)
+	{
+		shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
+		return (ERROR);
+	}
 	shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
 	if (!shell->parent)
-	{
-		if (close(STDIN) == -1)
-			return (ERROR);
-		if (close(STDOUT) == -1)
-			return (ERROR);
-		if (shell->redir.in > 0)
-		{
-			if (close(shell->redir.in) == -1)
-				return (ERROR);
-		}
-		if (shell->redir.out > 0)
-		{
-			if (close(shell->redir.out) == -1)
-				return (ERROR);
-		}
-		free_env(env);
-		free_final(cmd);
-		close_redir(shell);
-		init_redir(shell);
-		clear_history();
-		close(STDIN);
-		close(STDOUT);
-		close(STDERR);
-		exit(g_signal);
-	}
+		close_child(shell, env, cmd);
 	return (SUCCESS);
 }
 
@@ -151,6 +180,42 @@ char	*ft_readline(void)
 	return (ret);
 }
 
+static int	ft_end(t_shell *shell)
+{
+	clear_history();
+	free_env(shell->env);
+	if (close(STDIN) == -1 || close(STDOUT) == -1 || close(STDERR) == -1)
+		return (ft_free_exit(shell));
+	if (shell->redir.in > 0)
+	{
+		if (close(shell->redir.in) == -1)
+			return (ft_free_exit(shell));
+	}
+	if (shell->redir.out > 0)
+	{
+		if (close(shell->redir.out) == -1)
+			return (ft_free_exit(shell));
+	}
+	return (g_signal);
+}
+
+int	init_shell(t_shell *shell, char **envp)
+{
+	shell->exit = 0;
+	g_signal = 0;
+	shell->redir.in = dup(STDIN);
+	if (shell->redir.in == -1)
+		return (ft_free_exit(shell));
+	shell->redir.out = dup(STDOUT);
+	if (shell->redir.out == -1)
+		return (ft_free_exit(shell));
+	shell->redir.pipe_nbr = 0;
+	init_redir(shell);
+	if (init_env(shell, envp) == ERROR)
+		return (ft_free_exit(shell));
+	return (SUCCESS);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_final_command	*head;
@@ -159,48 +224,21 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	shell.exit = 0;
-	g_signal = 0;
-	shell.redir.in = dup(STDIN);
-	if (shell.redir.in == -1)
-		return (ERROR);
-	shell.redir.out = dup(STDOUT);
-	if (shell.redir.out == -1)
-		return (ERROR);
-	shell.redir.pipe_nbr = 0;
-	init_redir(&shell);
-	if (init_env(&shell, envp) == ERROR)
-		return (ERROR);
+	if (init_shell(&shell, envp) == ERROR)
+		return (ft_free_exit(&shell));
 	while (!shell.exit)
 	{
 		shell.redir.i_pipe = -1;
 		input = ft_readline();
 		if (ft_strcmp(input, ""))
 		{
-			shell.env->ret = g_signal;
-			g_signal = 0;
 			head = lexer(input, shell.env);
-			if (shell.env->ret != 0)
-				g_signal = shell.env->ret;
 			if (head != NULL)
-				minishell(&shell, shell.env, head);
+				if (minishell(&shell, shell.env, head) == ERROR)
+					ft_free_exit(&shell);
 			free_final(head);
 		}
 		input = ft_memdel(input);
 	}
-	clear_history();
-	free_env(shell.env);
-	if (close(STDIN) == -1 || close(STDOUT) == -1 || close(STDERR) == -1)
-		return (ERROR);
-	if (shell.redir.in > 0)
-	{
-		if (close(shell.redir.in) == -1)
-			return (ERROR);
-	}
-	if (shell.redir.out > 0)
-	{
-		if (close(shell.redir.out) == -1)
-			return (ERROR);
-	}
-	return (g_signal);
+	return (ft_end(&shell));
 }

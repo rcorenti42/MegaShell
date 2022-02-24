@@ -6,7 +6,7 @@
 #    By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/23 22:32:30 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/24 03:10:21 by rcorenti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ LIBFT = libft/libft.a
 
 CC = clang
 
-CFLAGS = -fsanitize=address -g3# -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
  
 OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
 
@@ -107,9 +107,6 @@ val:
 	@make clean
 	@source ./home.sh
 	@valshell
-	
-reval: 
-	@make fclean
-	@make val
+
 
 .PHONY: all clean fclean re val reval

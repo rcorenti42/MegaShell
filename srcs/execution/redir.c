@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 22:09:05 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 09:06:42 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static int	out_redir(t_shell *shell, t_final_command *cmd)
 	i = -1;
 	while (cmd->redir_out[++i].redir)
 	{
+		printf("gate 0 \n");
+
 		if (shell->redir.out_fd > 0)
 			if (close(shell->redir.out_fd) == -1)
 				return (ERROR);
@@ -82,6 +84,8 @@ static int	out_redir(t_shell *shell, t_final_command *cmd)
 			shell->redir.out_fd = open(cmd->redir_out[i].redir,
 					O_CREAT | O_WRONLY | O_APPEND,
 					S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+		shell->redir.out_fd = -1;
+		ft_putstr_fd("test", STDERR);
 		if (shell->redir.out_fd == -1)
 		{
 			error_redir(cmd->redir_out[i].redir);

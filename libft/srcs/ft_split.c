@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 03:07:06 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/21 10:28:43 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 03:51:10 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,14 @@ static char	**ft_spliting(char **tab, const char *s, char c)
 		if (*s)
 		{
 			len = ft_len_split(s, c);
-			tab[i] = (char *)malloc(sizeof(char) * (len + 1));
+			tab[i] = (char *)malloc(sizeof(char) * (len + 1));	
 			if (!tab[i])
+			{
+				while (tab[--i])
+					tab[i] = ft_memdel(tab[i]);
+				tab = ft_memdel(tab);
 				return (NULL);
+			}
 			ft_memcpy(tab[i], s, (size_t)len);
 			tab[i][len] = '\0';
 			s += len;
