@@ -6,13 +6,32 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:17:07 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/21 17:35:35 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 09:41:03 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#include "minishell.h"
+t_char	*bruh(t_token *command)
+{
+	if (command == NULL)
+		return (NULL);
+	return (char_chr(command->token, '$'));
+}
+
+int	free_cmd(t_command *head)
+{
+	t_command	*tmp;
+
+	while (head)
+	{
+		free(head->command);
+		tmp = head;
+		head = head->next;
+		free(tmp);
+	}
+	return (ERROR);	
+}
 
 t_char	*inhib_quotes(t_char *token)
 {
@@ -50,6 +69,8 @@ t_char	*remove_quotes(t_char *token)
 	i = 0;
 	j = 0;
 	new = malloc(sizeof(t_char) * (char_len(token) + 1));
+	if (!new)
+		return (NULL);
 	while (token[i].c != '\0')
 	{
 		if ((token[i].c == '"' || token[i].c == '\'')

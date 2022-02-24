@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+         #
+#    By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/24 03:10:21 by rcorenti         ###   ########.fr        #
+#    Updated: 2022/02/24 11:45:32 by sobouatt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,17 +28,19 @@ SRCS1 = main.c \
 SRCS2 = lexer.c \
 	lexer_utils.c \
 	list.c \
-	list2.c \
 	first_pass.c \
 	first_pass2.c \
 	second_pass.c \
 	expand.c \
 	expand_unquoted.c \
 	expand_utils.c \
+	expand_utils2.c \
 	remove_quotes.c \
 	split_cmd.c \
 	fill_final.c \
+	fill_final2.c \
 	ft_itoa.c \
+	get_token.c
 
 SRCS3 = redir.c \
 	fd.c \

@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 08:53:06 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 14:33:48 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static int	ft_free_exit(t_shell *shell)
 	close(STDIN);
 	close(STDOUT);
 	close(STDERR);
-	clear_history();
 	free_env(shell->env);
 	perror("Error : ");
 	return (ERROR);
@@ -82,6 +81,7 @@ void	quit_handler(int code)
 
 static void	close_child(t_shell *shell, t_env *env, t_final_command *cmd)
 {
+	(void)env;
 	if (!shell->parent)
 	{
 		close(STDIN);
@@ -90,7 +90,6 @@ static void	close_child(t_shell *shell, t_env *env, t_final_command *cmd)
 			close(shell->redir.in);
 		if (shell->redir.out > 0)
 			close(shell->redir.out);
-		free_env(env);
 		free_final(cmd);
 		close_redir(shell);
 		init_redir(shell);
@@ -233,6 +232,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strcmp(input, ""))
 		{
 			head = lexer(input, shell.env);
+			display_final(head);
 			if (head != NULL)
 				if (minishell(&shell, shell.env, head) == ERROR)
 					ft_free_exit(&shell);

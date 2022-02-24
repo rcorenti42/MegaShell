@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:57:28 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/22 05:52:16 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 02:37:06 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	treat_quote(char c, int quote)
 	return (quote);
 }
 
-void	free_tokens(t_token *token)
+void	*free_tokens(t_token *token)
 {
 	t_token	*tmp;
 
@@ -52,6 +52,7 @@ void	free_tokens(t_token *token)
 		free(tmp->token);
 		free(tmp);
 	}
+	return (NULL);
 }
 
 int	get_token_size(char *str, int pos)
@@ -78,13 +79,13 @@ int	get_token_size(char *str, int pos)
 	return (pos - token_size);
 }
 
-char	*find_env(char *str, char *var, int ret)
+char	*find_env(char *str, char *var)
 {
 	int		i;
 
 	i = 0;
 	if (var[i] == '?')
-		return (ft_itoa(ret));
+		return (ft_itoa(g_signal));
 	while (var[i] && str[i])
 	{
 		if (str[i] != var[i])

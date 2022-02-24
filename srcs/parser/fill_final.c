@@ -6,47 +6,11 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 14:50:49 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 01:00:39 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 04:27:30 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_final_command	*ft_lstnew_final(void)
-{
-	t_final_command	*new;
-
-	new = malloc(sizeof(t_final_command));
-	new->next = NULL;
-	return (new);
-}
-
-void	ft_lstadd_back_final(t_final_command **command, t_final_command *new)
-{
-	t_final_command	*tmp;
-
-	tmp = *command;
-	if (*command == NULL)
-		*command = new;
-	else
-	{
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-	}
-}
-
-int	get_tk_nb_tmp(t_token **command)
-{
-	int	i;
-
-	i = 0;
-	while (command[i] != NULL)
-	{
-		i++;
-	}
-	return (i);
-}
 
 int	get_redir_in_nb(t_token **command)
 {
@@ -106,22 +70,6 @@ int	get_redir_out_nb(t_token **command)
 	return (j);
 }
 
-char	*to_string(t_char *token)
-{
-	int		i;
-	char	*str;
-
-	i = 0;
-	str = malloc(sizeof(char) * (char_len(token) + 1));
-	while (token[i].c != '\0')
-	{
-		str[i] = token[i].c;
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
 char	**fill_args(t_token **command)
 {
 	char	**args;
@@ -132,6 +80,8 @@ char	**fill_args(t_token **command)
 	ac = get_tk_nb_tmp(command)
 		- (get_redir_in_nb(command) * 2 + get_redir_out_nb(command) * 2);
 	args = malloc(sizeof(char *) * (ac + 1));
+	if (!args)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (command[i] != NULL)
@@ -149,14 +99,15 @@ char	**fill_args(t_token **command)
 t_operand	*fill_in(t_token **command)
 {
 	t_operand	*in;
-	int			ac;
 	int			i;
 	int			j;
 
-	ac = get_redir_in_nb(command);
-	if (ac < 0)
+	i = get_redir_in_nb(command);
+	if (i < 0)
 		return (NULL);
-	in = malloc(sizeof(t_operand) * (ac + 1));
+	in = malloc(sizeof(t_operand) * (i + 1));
+	if (!in)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (command[i] != NULL)
@@ -164,11 +115,7 @@ t_operand	*fill_in(t_token **command)
 		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token,
 					"<") == 0 || ft_charcmp(command[i]->token, "<<") == 0))
 		{
-			if (ft_charcmp(command[i]->token, "<") == 0)
-				in[j].type = simple;
-			else
-				in[j].type = doubles;
-			i++;
+			in[j].type = get_redir_type(command[i++]->token);
 			in[j++].redir = to_string(command[i]->token);
 		}
 		else
@@ -181,14 +128,15 @@ t_operand	*fill_in(t_token **command)
 t_operand	*fill_out(t_token **command)
 {
 	t_operand	*out;
-	int			ac;
 	int			i;
 	int			j;
 
-	ac = get_redir_out_nb(command);
-	if (ac < 0)
+	i = get_redir_out_nb(command);
+	if (i < 0)
 		return (NULL);
-	out = malloc(sizeof(t_operand) * (ac + 1));
+	out = malloc(sizeof(t_operand) * (i + 1));
+	if (!out)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (command[i] != NULL)
@@ -196,47 +144,12 @@ t_operand	*fill_out(t_token **command)
 		if (command[i]->type == token_operand && (ft_charcmp(command[i]->token,
 					">") == 0 || ft_charcmp(command[i]->token, ">>") == 0))
 		{
-			if (ft_charcmp(command[i]->token, ">") == 0)
-				out[j].type = simple;
-			else
-				out[j].type = doubles;
-			i++;
-			out[j].redir = to_string(command[i]->token);
-			j++;
+			out[j].type = get_redir_type(command[i++]->token);
+			out[j++].redir = to_string(command[i]->token);
 		}
 		else
 			i++;
 	}
 	out[j].redir = NULL;
 	return (out);
-}
-
-t_final_command	*lexer_fill_final(t_command *cmd_head)
-{
-	t_final_command	*final_head;
-	t_final_command	*final_tmp;
-	t_command		*cmd_tmp;
-
-	cmd_tmp = cmd_head;
-	final_head = NULL;
-	while (cmd_tmp)
-	{
-		if (cmd_head == NULL)
-		{
-			final_head = ft_lstnew_final();
-		}
-		else
-		{
-			final_tmp = ft_lstnew_final();
-			ft_lstadd_back_final(&final_head, final_tmp);
-		}
-		final_tmp->redir_out = fill_out(cmd_tmp->command);
-		final_tmp->redir_in = fill_in(cmd_tmp->command);
-		if (final_tmp->redir_in != NULL && final_tmp->redir_out != NULL)
-			final_tmp->args = fill_args(cmd_tmp->command);
-		else
-			final_tmp->args = NULL;
-		cmd_tmp = cmd_tmp->next;
-	}
-	return (final_head);
 }

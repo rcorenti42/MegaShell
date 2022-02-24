@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/24 03:17:00 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 11:50:08 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,23 +114,22 @@ typedef struct s_shell
 //lexer.c
 t_final_command		*lexer(char *str, t_env *env);
 int				get_token_size(char *str, int pos);
-void	free_cmd(t_command *head);
+int				free_cmd(t_command *head);
 
 //lexer_utils.c
 int			skip_spaces(char *str);
 int			treat_quote(char c, int quote);
 char		*show_type(int type);
-void		free_tokens(t_token *token);
-char		*find_env(char *str, char *var, int ret);
+void		*free_tokens(t_token *token);
+char		*find_env(char *str, char *var);
 
 //lexer_first_pass.c
-t_token	*lexer_first_pass(char *str, t_env *env);
-t_char		*get_token(char *str, size_t *pos);
+t_token	*lexer_first_pass(char *str);
 
 //utils.c
 int	char_len(t_char *str);
 int	count_pipes(t_final_command *cmd);
-void	*display_syntax_error(t_env *env);
+void	*display_syntax_error(void);
 int	count_pipes(t_final_command *cmd);
 void	free_tab(char **tab);
 void	free_env(t_env *env);
@@ -205,8 +204,6 @@ void	handler(int code);
 void	quit_handler(int code);
 
 t_final_command *lexer_fill_final(t_command *cmd_head);
-void	*display_syntax_error(t_env *env);
-
 
 void    display_final(t_final_command *head);
 int	expand(t_command *cmd, size_t pos, t_char *word, t_env *env);
@@ -216,10 +213,33 @@ t_char	*expand_quoted(t_char *tk, t_char *word, t_env *env);
 char	*t_char_to_char(t_char *t_chars);
 void	fill_expanded(t_char *new, t_char *tk, t_char *word, char *exp);
 
-t_char	*treat_pipe(size_t *pos, t_char *token);
+int		treat_pipe(size_t *pos, t_char *token);
 enum e_type	get_token_type(t_char *str);
 int	ft_charcmp(t_char *s1, const char *s2);
 
 char	*ft_itoa(int nb);
+char	*finish_var(char *str, int i, char c);
+int		ft_isdigit(char c);
+
+int	count_tokens(t_token *token);
+int	init_cursors(t_command *cmd, t_token ***new_tokens, size_t *cursors, size_t new_size);
+
+t_final_command	*ft_lstnew_final(void);
+void	ft_lstadd_back_final(t_final_command **command, t_final_command *new);
+int	get_tk_nb_tmp(t_token **command);
+int	get_redir_type(t_char *token);
+char	*to_string(t_char *token);
+
+t_operand	*fill_in(t_token **command);
+t_operand	*fill_out(t_token **command);
+char	**fill_args(t_token **command);
+int	get_redir_out_nb(t_token **command);
+int	get_redir_in_nb(t_token **command);
+t_char	*bruh(t_token *command);
+int	cut_operand(t_char *token, char *str, size_t *pos);
+int	get_token(t_char **token, char *str, size_t *pos);
+int	pipe_proxy(t_token *head);
+
+void	*broke_free(void *ptr, void *ret);
 
 #endif

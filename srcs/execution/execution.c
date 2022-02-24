@@ -6,13 +6,13 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/24 09:16:08 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/24 14:43:03 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	executor(t_shell *shell, t_final_command *cmd)
+int	executor(t_shell *shell, t_final_command *cmd)
 {
 	if (!cmd->args[0])
 		return (SUCCESS);
@@ -33,7 +33,7 @@ static int	executor(t_shell *shell, t_final_command *cmd)
 	return (SUCCESS);
 }
 
-static int	exec_error(t_shell *shell, t_final_command *cmd, int child)
+int	exec_error(t_shell *shell, t_final_command *cmd, int child)
 {
 	if (redir(shell, cmd) == ERROR)
 		return (ERROR);
@@ -47,7 +47,7 @@ static int	exec_error(t_shell *shell, t_final_command *cmd, int child)
 	return (SUCCESS);
 }
 
-int	(t_shell *shell, t_final_command *cmd)
+int	execution(t_shell *shell, t_final_command *cmd)
 {
 	int	child;
 

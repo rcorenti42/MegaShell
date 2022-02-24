@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 07:55:34 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/22 03:10:14 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 04:15:00 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ t_char	*remove_quote(t_char *token)
 	if (quote == 0)
 		return (token);
 	new = malloc(sizeof(t_token) * char_len(token));
+	if (new == NULL)
+	{
+		free(token);
+		return (NULL);
+	}
 	i = 0;
 	j = 0;
 	while (token[i].c != '\0')
@@ -69,6 +74,11 @@ t_command	*lexer_remove_quote(t_command *head)
 		while (node->command[i] != NULL)
 		{
 			node->command[i]->token = remove_quote(node->command[i]->token);
+			if (node->command[i]->token == NULL)
+			{
+				free_cmd(head);
+				return (NULL);
+			}
 			i++;
 		}
 		node = node->next;

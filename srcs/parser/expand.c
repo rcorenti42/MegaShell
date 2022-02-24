@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 07:56:33 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/22 01:41:02 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 06:48:59 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ t_char	*expand_unknown(t_char *token, t_char *word, char *var)
 
 	i = 0;
 	new = malloc(sizeof(t_char) * (char_len(token) + 1) - (ft_strlen(var)));
+	if (new == NULL)
+		return (NULL);
 	while (token + i != word)
 		fill_tchar(&new[i], token[i].c, token[i].inhib, &i);
 	j = get_expand_size(word);
@@ -56,6 +58,12 @@ void	fill_expanded(t_char *new, t_char *tk, t_char *word, char *exp)
 		free(exp);
 }
 
+void	*broke_free(void *ptr, void *ret)
+{
+	free (ptr);
+	return (ret);
+}
+
 t_char	*expand_quoted(t_char *tk, t_char *word, t_env *env)
 {
 	char	*var;
@@ -65,13 +73,13 @@ t_char	*expand_quoted(t_char *tk, t_char *word, t_env *env)
 	var = get_var(word);
 	while (env)
 	{
-		exp = find_env(env->val, var, env->ret);
+		exp = find_env(env->val, var);
 		if (exp != NULL)
 		{
-			new = malloc(sizeof(t_token) * ((char_len(tk)
-							+ ft_strlen(exp) - ft_strlen(var) + 1)));
+			new = malloc(sizeof(t_token) * (char_len(tk) + ft_strlen(exp)
+						- ft_strlen(var) + 1));
 			if (new == NULL)
-				return (NULL);
+				return (broke_free(var, NULL));
 			fill_expanded(new, tk, word, exp);
 			break ;
 		}
@@ -95,44 +103,4 @@ char	*t_char_to_char(t_char *t_chars)
 	}
 	((char *) t_chars)[i] = '\0';
 	return ((char *) t_chars);
-}
-
-t_char	*bruh(t_token *command)
-{
-	if (command->token == NULL)
-		return (NULL);
-	return (char_chr(command->token, '%'));
-}
-
-t_command *lexer_expand(t_command *head, t_env *env)
-{
-	t_char *chr_rt;
-	int res;
-	t_command *node;
-	int i;
-
-	node = head;
-	while (node)
-	{
-		i = -1;
-		while (node->command[++i] != NULL)
-		{
-			chr_rt = char_chr(node->command[i]->token, '$');
-			while (chr_rt != NULL)
-			{
-				res = expand(node, i, chr_rt, env);
-				if (res != 0)
-				{
-					free_cmd(head);
-					return (NULL);
-				}
-				if (node->command[i] == NULL)
-					chr_rt = NULL;
-				else
-					chr_rt = char_chr(node->command[i]->token, '$');
-			}
-		}
-		node = node->next;
-	}
-	return (head);
 }
