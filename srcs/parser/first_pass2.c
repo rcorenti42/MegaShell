@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 00:50:45 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 10:27:33 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/25 00:05:56 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ int	ft_charcmp(t_char *s1, const char *s2)
 			i++;
 		}
 	}
-	return (0);
+	return ((unsigned char)s1[i].c - (unsigned char)s2[i]);
 }
 
 enum e_type	get_token_type(t_char *str)
 {
-	if (!ft_charcmp(str, "<") || !ft_charcmp(str, "<<")
-		|| !ft_charcmp(str, ">") || !ft_charcmp(str, ">>"))
+	if (ft_charcmp(str, "<") == 0 || ft_charcmp(str, "<<") == 0
+		|| ft_charcmp(str, ">") == 0 || ft_charcmp(str, ">>") == 0)
 		return (token_operand);
 	if (str[0].c == '|')
 		return (token_pipe);

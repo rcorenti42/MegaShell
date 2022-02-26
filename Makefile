@@ -6,7 +6,7 @@
 #    By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/24 11:45:32 by sobouatt         ###   ########.fr        #
+#    Updated: 2022/02/26 03:00:05 by sobouatt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,11 @@ PARS = parser
 EXEC = execution
 
 SRCS1 = main.c \
+	main2.c \
 	utils.c \
 	utils_two.c \
 	display_args.c \
+	custom_frees.c 
 
 SRCS2 = lexer.c \
 	lexer_utils.c \
@@ -40,7 +42,9 @@ SRCS2 = lexer.c \
 	fill_final.c \
 	fill_final2.c \
 	ft_itoa.c \
-	get_token.c
+	get_token.c \
+	trash.c \
+	lexer2.c
 
 SRCS3 = redir.c \
 	fd.c \
@@ -59,6 +63,7 @@ SRCS3 = redir.c \
 	execution.c \
 	ft_export_utils.c \
 	heredoc.c \
+	ft_calloc.c
 
 PARS = ${addsuffix /parser,${SRCS}}
 
@@ -68,12 +73,10 @@ LIBFT = libft/libft.a
 
 CC = clang
 
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror -MMD
  
 OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
-
-.c.o:
-	$(CC) $(CFLAGS) -I $(INC) -c $< -o ${<:.c=.o}
+DEPS = ${OBJS:%.o=%.d}
 
 all: $(NAME)
 	@echo "  __  __                      _          _ _   ________     __  __                      _          _ _   ________    __  __                      _          _ _   ________     __  __                      _          _ _   ________   "
@@ -89,11 +92,17 @@ all: $(NAME)
 $(NAME): $(OBJS) ${LIBFT} ${INC}
 	$(CC) $(CFLAGS) ${OBJS} -lreadline -o $(NAME) ${LIBFT}
 
+-include ${DEPS}
+.c.o:
+	$(CC) $(CFLAGS) -I $(INC) -c $< -o ${<:.c=.o}
+
+
 $(LIBFT):
 	make -C ./libft
 
 clean:
 	@rm -f $(OBJS)
+	@rm -f $(DEPS)
 	@rm -rf $(LIBFT)
 	@make clean -C libft
 

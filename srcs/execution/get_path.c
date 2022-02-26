@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:47:51 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/23 20:52:46 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/26 02:25:26 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static char	*relative_path(char *path, char *arg, char *bin)
 		return (NULL);
 	while (path_split[++i])
 	{
-		bin = (char *)calloc(sizeof(char), (ft_strlen(path_split[i])
+		bin = (char *)ft_calloc(sizeof(char), (ft_strlen(path_split[i])
 					+ ft_strlen(arg) + 2));
 		if (!bin)
 			return (NULL);

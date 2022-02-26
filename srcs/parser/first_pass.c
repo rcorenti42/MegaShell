@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:01:34 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/23 20:54:43 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/25 01:01:35 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	create_tokens(t_token **head, t_token **node, char *str, size_t pos)
 	{
 		if (get_token(&token, str, &pos) == ERROR)
 			return (ERROR);
+		if (token == NULL)
+			continue ;
 		if (*head == NULL)
 		{
 			*head = ft_lstnew(token, get_token_type(token));
@@ -74,7 +76,7 @@ t_token **node, size_t *pos)
 	*token = NULL;
 }
 
-t_token	*lexer_first_pass(char *str)
+int	lexer_first_pass(char *str, t_token **tokens)
 {
 	size_t			pos;
 	t_char			*token;
@@ -85,12 +87,14 @@ t_token	*lexer_first_pass(char *str)
 	if (create_tokens(&head, &node, str, pos) != 0)
 	{	
 		free_tokens(head);
-		return (NULL);
+		return (ERROR);
 	}
 	if (pipe_proxy(head) != 0)
 	{
 		free_tokens(head);
-		return (display_syntax_error());
+		display_syntax_error();
+		return (ERROR);
 	}
-	return (head);
+	*tokens = head;
+	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 22:04:52 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 11:05:57 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/25 11:02:46 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	size_zero(t_command *cmd, size_t *pos)
 	else
 		(*pos)--;
 	i = *pos;
-	while (cmd->command[*pos + 1] != NULL)
+	while (cmd->command[i + 1] != NULL)
 	{
-		cmd->command[*pos + 1] = cmd->command[*pos + 2];
-		cmd->command[*pos]->next = cmd->command[*pos + 1];
+		cmd->command[i + 1] = cmd->command[i + 2];
+		cmd->command[i]->next = cmd->command[i + 1];
 		i++;
 	}
 }
@@ -85,12 +85,6 @@ int	size_other(t_command *cmd, t_token *repl, size_t new_size, size_t pos)
 	return (SUCCESS);
 }
 
-int	broke_free2(void *ptr, int ret)
-{
-	free(ptr);
-	return (ret);
-}
-
 int	expand(t_command *cmd, size_t pos, t_char *word, t_env *env)
 {
 	size_t	new_size;
@@ -103,10 +97,12 @@ int	expand(t_command *cmd, size_t pos, t_char *word, t_env *env)
 	replace_t_chars = expand_quoted(cmd->command[pos]->token, word, env);
 	if (replace_t_chars == NULL)
 		return (-1);
-	repl = lexer_first_pass(t_char_to_char(replace_t_chars));
-	free(replace_t_chars);
-	if (repl == NULL)
+	if (lexer_first_pass(t_char_to_char(replace_t_chars), &repl) != SUCCESS)
+	{
+		free(replace_t_chars);
 		return (-1);
+	}
+	free(replace_t_chars);
 	repl = lexer_second_pass(repl);
 	new_size = count_tokens(repl);
 	if (new_size == 0)

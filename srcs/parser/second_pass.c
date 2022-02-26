@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:17:07 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 09:41:03 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 14:32:07 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	free_cmd(t_command *head)
 		head = head->next;
 		free(tmp);
 	}
-	return (ERROR);	
+	return (ERROR);
 }
 
 t_char	*inhib_quotes(t_char *token)
@@ -47,10 +47,7 @@ t_char	*inhib_quotes(t_char *token)
 			token[i].inhib = 'x';
 			i++;
 			while (token[i].c != quote)
-			{
-				token[i].inhib = quote;
-				i++;
-			}
+				token[i++].inhib = quote;
 			token[i].inhib = 'x';
 		}
 		else

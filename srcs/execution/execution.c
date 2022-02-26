@@ -6,18 +6,21 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:33:09 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/24 14:43:03 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/26 21:57:06 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	executor(t_shell *shell, t_final_command *cmd)
+static int	executor(t_shell *shell, t_final_command *cmd)
 {
 	if (!cmd->args[0])
 		return (SUCCESS);
 	else if (!ft_strcmp(cmd->args[0], "exit") && shell->redir.pipe_nbr == 0)
+	{
 		ft_exit(shell, cmd);
+		return (ERROR);
+	}
 	else if (is_builtin(cmd))
 	{
 		if (builtin_exe(shell, cmd) == ERROR)
@@ -33,10 +36,12 @@ int	executor(t_shell *shell, t_final_command *cmd)
 	return (SUCCESS);
 }
 
-int	exec_error(t_shell *shell, t_final_command *cmd, int child)
+static int	exec_redir(t_shell *shell, t_final_command *cmd, int child)
 {
 	if (redir(shell, cmd) == ERROR)
 		return (ERROR);
+	if (!shell->exec)
+		return (SUCCESS);
 	if (child == 2)
 	{
 		if (execution(shell, cmd->next) == ERROR)
@@ -70,5 +75,5 @@ int	execution(t_shell *shell, t_final_command *cmd)
 		if (child < 0)
 			return (ERROR);
 	}
-	return (exec_error(shell, cmd, child));
+	return (exec_redir(shell, cmd, child));
 }

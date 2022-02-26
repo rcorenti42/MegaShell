@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 19:04:24 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 07:15:33 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 14:08:57 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ char	*finish_var(char *str, int i, char c)
 	return (str);
 }
 
-int	init_cursors(t_command *cmd, t_token ***new_tokens, size_t *cursors, size_t new_size)
+int	init_cursors(t_command *cmd, t_token ***new_tokens,
+size_t *cursors, size_t new_size)
 {
 	cursors[0] = 0;
 	while (cmd->command[cursors[0]] != NULL)

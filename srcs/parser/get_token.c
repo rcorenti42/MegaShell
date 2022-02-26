@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:17:39 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 11:50:36 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/25 01:00:23 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,28 @@ int	cut_operand(t_char *token, char *str, size_t *pos)
 	return (0);
 }
 
-int	get_token(t_char **token, char *str, size_t *pos)
+int	init_get_token(t_char **token, char *str, size_t *pos)
 {
-	size_t		i;
-	int			quote;
+	int	quote;
 
 	*token = NULL;
 	*pos += skip_spaces(str + *pos);
 	quote = get_token_size(str, *pos);
 	if (quote == 0)
-		return (0);
+		return (ERROR);
 	*token = malloc(sizeof(t_char) * (quote + 1));
 	if (!(*token))
 		return (ERROR);
+	return (SUCCESS);
+}
+
+int	get_token(t_char **token, char *str, size_t *pos)
+{
+	size_t		i;
+	int			quote;
+
+	if (init_get_token(token, str, pos) != 0)
+		return (0);
 	if (str[*pos] == '<' || str[*pos] == '>'
 		|| str[*pos] == '|' || token == NULL)
 		return (cut_operand(*token, str, pos));

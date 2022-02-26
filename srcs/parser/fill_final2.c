@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 03:55:35 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 03:54:01 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 20:55:12 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ int	get_tk_nb_tmp(t_token **command)
 
 int	get_redir_type(t_char *token)
 {
-	if (ft_charcmp(token, ">") == 0 || ft_charcmp(token, "<") == 0)
-		return (simple);
-	return (doubles);
+	if (ft_charcmp(token, ">>") == 0 || ft_charcmp(token, "<<") == 0)
+		return (doubles);
+	return (simple);
 }
 
 char	*to_string(t_char *token)

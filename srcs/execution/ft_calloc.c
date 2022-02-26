@@ -1,21 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/20 16:36:06 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/25 14:35:32 by sobouatt         ###   ########.fr       */
+/*   Created: 2022/02/26 02:23:47 by rcorenti          #+#    #+#             */
+/*   Updated: 2022/02/26 02:27:29 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_isalpha(int c)
+int	ft_check_char(char *str)
 {
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	else
-		return (0);
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	if (str[i] == '=')
+		return (SUCCESS);
+	return (ERROR);
+}
+
+void	bzero(void *s, size_t n)
+{
+	while (n-- > 0)
+		((char *)s)[n] = 0;
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	ptr = malloc(nmemb * size);
+	if (ptr != NULL)
+		bzero(ptr, nmemb * size);
+	return (ptr);
 }

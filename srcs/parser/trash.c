@@ -1,21 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   trash.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/20 16:36:06 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/25 14:35:32 by sobouatt         ###   ########.fr       */
+/*   Created: 2022/02/24 14:40:07 by sobouatt          #+#    #+#             */
+/*   Updated: 2022/02/24 17:28:19 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_isalpha(int c)
+void	*broke_free(void *ptr, void *ret)
 {
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	else
-		return (0);
+	free (ptr);
+	return (ret);
+}
+
+int	broke_free2(void *ptr, int ret)
+{
+	free(ptr);
+	return (ret);
+}
+
+int	cmd_free_broke(t_command *cmd_head)
+{
+	free_cmd(cmd_head);
+	return (ERROR);
 }

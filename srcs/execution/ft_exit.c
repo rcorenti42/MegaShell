@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/05 04:45:16 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/22 20:37:40 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/26 05:39:35 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	ft_exit(t_shell *shell, t_final_command *cmd)
 			g_signal = 1;
 			return ;
 		}
-		g_signal = ft_atoi(cmd->args[1]);
+		else
+			g_signal = ft_atoi(cmd->args[1]);
 	}
 	shell->exit = 1;
 }

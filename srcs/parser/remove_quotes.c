@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 07:55:34 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 04:15:00 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 14:38:33 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,10 @@ int	get_nb_of_quotes(t_char *token)
 	return (quote);
 }
 
-t_char	*remove_quote(t_char *token)
+t_char	*remove_quote(t_char *token, int i, int j)
 {
 	t_char	*new;
 	int		quote;
-	int		i;
-	int		j;
 
 	quote = get_nb_of_quotes(token);
 	if (quote == 0)
@@ -45,8 +43,6 @@ t_char	*remove_quote(t_char *token)
 		free(token);
 		return (NULL);
 	}
-	i = 0;
-	j = 0;
 	while (token[i].c != '\0')
 	{
 		if ((token[i].c == '"' || token[i].c == '\'') && token[i].inhib == 'x')
@@ -73,7 +69,8 @@ t_command	*lexer_remove_quote(t_command *head)
 		i = 0;
 		while (node->command[i] != NULL)
 		{
-			node->command[i]->token = remove_quote(node->command[i]->token);
+			node->command[i]->token
+				= remove_quote(node->command[i]->token, 0, 0);
 			if (node->command[i]->token == NULL)
 			{
 				free_cmd(head);

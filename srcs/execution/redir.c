@@ -6,17 +6,19 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 03:34:59 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/24 14:41:57 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/26 22:51:55 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	error_redir(char *str)
+static void	error_redir(t_shell *shell, char *str)
 {
 	ft_putstr_fd("megashell: ", STDERR);
 	ft_putstr_fd(str, STDERR);
+	ft_putstr_fd(": ", STDERR);
 	ft_putendl_fd(strerror(errno), STDERR);
+	shell->exec = 0;
 	g_signal = 1;
 }
 
@@ -56,9 +58,12 @@ static int	ft_input(t_shell *shell, char *str)
 		if (close(shell->redir.in_fd) == -1)
 			return (ERROR);
 	}
-	shell->redir.in_fd = open(str, O_RDONLY);
+		shell->redir.in_fd = open(str, O_RDONLY);
 	if (shell->redir.in_fd == -1)
+	{
+		error_redir(shell, str);
 		return (SUCCESS);
+	}
 	if (dup2(shell->redir.in_fd, STDIN) == -1)
 		return (ERROR);
 	return (SUCCESS);
@@ -69,7 +74,7 @@ static int	out_redir(t_shell *shell, t_final_command *cmd)
 	int	i;
 
 	i = -1;
-	while (cmd->redir_out[++i].redir)
+	while (cmd->redir_out[++i].redir && shell->exec)
 	{
 		if (shell->redir.out_fd > 0)
 			if (close(shell->redir.out_fd) == -1)
@@ -82,11 +87,11 @@ static int	out_redir(t_shell *shell, t_final_command *cmd)
 			shell->redir.out_fd = open(cmd->redir_out[i].redir,
 					O_CREAT | O_WRONLY | O_APPEND,
 					S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-		shell->redir.out_fd = -1;
 		if (shell->redir.out_fd == -1)
-			error_redir(cmd->redir_out[i].redir);
-		if (shell->redir.out_fd == -1)
-			return (ERROR);
+		{
+			error_redir(shell, cmd->redir_out[i].redir);
+			return (SUCCESS);
+		}
 		if (dup2(shell->redir.out_fd, STDOUT) == -1)
 			return (ERROR);
 	}
@@ -98,7 +103,7 @@ int	redir(t_shell *shell, t_final_command *cmd)
 	int		i;
 
 	i = 0;
-	while (cmd->redir_in[i].redir)
+	while (cmd->redir_in[i].redir && shell->exec)
 	{
 		if (cmd->redir_in[i].type == simple)
 		{

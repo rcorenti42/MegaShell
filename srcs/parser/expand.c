@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 07:56:33 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 06:48:59 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/26 05:52:49 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_char	*expand_unknown(t_char *token, t_char *word, char *var)
 	t_char	*new;
 
 	i = 0;
-	new = malloc(sizeof(t_char) * (char_len(token) + 1) - (ft_strlen(var)));
+	new = malloc(sizeof(t_char) * ((char_len(token) + 1) - (ft_strlen(var))));
 	if (new == NULL)
 		return (NULL);
 	while (token + i != word)
@@ -56,12 +56,6 @@ void	fill_expanded(t_char *new, t_char *tk, t_char *word, char *exp)
 	new[i + j].c = '\0';
 	if (word[1].c == '?')
 		free(exp);
-}
-
-void	*broke_free(void *ptr, void *ret)
-{
-	free (ptr);
-	return (ret);
 }
 
 t_char	*expand_quoted(t_char *tk, t_char *word, t_env *env)

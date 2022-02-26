@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 23:46:10 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/24 03:55:03 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/26 02:27:12 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static int	is_in_env(char *str, t_env *env)
 	int		i;
 
 	i = 0;
+	if (ft_check_char(str) == ERROR)
+		return (0);
 	while (env)
 	{
 		name = (char *)malloc(sizeof(char) * (ft_size_env(str) + 1));
@@ -70,7 +72,7 @@ static int	is_in_env(char *str, t_env *env)
 		if (!error_export(name))
 			i = 1;
 		else if (!ft_strncmp(name, env->val, ft_strlen(name))
-			&& (env->val[ft_strlen(name)] == '=' || !env->val[ft_strlen(name)]))
+			&& (env->val[ft_strlen(name)] == '='))
 		{
 			env->val = ft_memdel(env->val);
 			env->val = ft_strdup(str);

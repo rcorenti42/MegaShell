@@ -6,7 +6,7 @@
 /*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 11:26:41 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/24 03:47:42 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/26 22:04:35 by rcorenti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void	exec_error(char *arg)
 {
+	g_signal = 127;
 	ft_putstr_fd("megashell: ", STDERR);
 	ft_putstr_fd(arg, STDERR);
 	ft_putendl_fd(": command not found", STDERR);
@@ -21,7 +22,6 @@ static void	exec_error(char *arg)
 
 static int	bin_exe_quit(char **tenv, char *path, char *arg)
 {
-	g_signal = 127;
 	exec_error(arg);
 	free_tab(tenv);
 	path = ft_memdel(path);
@@ -54,13 +54,20 @@ int	bin_exe(t_shell *shell, t_final_command *cmd)
 		return (ERROR);
 	tenv = tenv_to_tab(env);
 	if (!tenv)
-	{
 		path = ft_memdel(path);
+	if (!tenv)
 		return (ERROR);
-	}
 	else if (!ft_strcmp(path, ""))
 		return (bin_exe_quit(tenv, path, cmd->args[0]));
-	return (bin_execution(path, cmd->args, tenv));
+	if (bin_execution(path, cmd->args, tenv) == ERROR)
+	{
+		if (shell->redir.out > 0)
+			close(shell->redir.out);
+		if (shell->redir.in > 0)
+			close(shell->redir.in);
+		return (ERROR);
+	}
+	return (SUCCESS);
 }
 
 int	bin_exe_fork(t_shell *shell, t_final_command *cmd)

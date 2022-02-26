@@ -6,7 +6,7 @@
 /*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 08:21:32 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/24 07:58:05 by sobouatt         ###   ########.fr       */
+/*   Updated: 2022/02/24 17:29:20 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,20 +104,18 @@ char	*get_var(t_char *word)
 	str = malloc(sizeof(char) * ((get_expand_size(word) + 1)));
 	if (!str)
 		broke_free(word, NULL);
-	i = 1;
-	if (word[i].c == '?')
-		return (finish_var(str, i, '?'));
-	while (word[i].c != '\0' && ft_isdigit(word[i].c))
-	{
+	if (word[1].c == '?')
+		return (finish_var(str, 1, '?'));
+	i = 0;
+	while (word[++i].c != '\0' && (ft_isdigit(word[i].c) || word[i].c == '_'))
 		str[i - 1] = word[i].c;
-		i++;
-	}
 	if (i != 1)
 		return (finish_var(str, i, '='));
 	while (word[i].c != '\0')
 	{
 		if ((word[i].c < 'a' || word->c > 'z') && (word[i].c < 'A'
-				|| word->c > 'Z') && word->c != '_' && ft_isdigit(word[i].c) != 1)
+				|| word->c > 'Z') && word->c != '_'
+			&& ft_isdigit(word[i].c) != 1)
 			break ;
 		str[i - 1] = word[i].c;
 		i++;
