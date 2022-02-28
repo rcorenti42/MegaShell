@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:51:25 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/26 23:17:23 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/27 23:38:56 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	minishell(t_shell *shell, t_env *env, t_final_command *cmd)
 	close_redir(shell);
 	init_redir(shell);
 	init_pipe(shell);
-	if (something_went_wrong(shell))
+	if (something_went_wrong(shell) == ERROR)
 		return (ERROR);
 	shell->redir.pid_pipe = ft_memdel(shell->redir.pid_pipe);
 	if (!shell->parent)
@@ -76,7 +76,7 @@ int	init_shell(t_shell *shell, char **envp)
 		return (ft_free_exit(shell));
 	shell->redir.pipe_nbr = 0;
 	init_redir(shell);
-	if (init_env(shell, envp) == ERROR)
+	if (init_env(shell, envp) == ERROR || ft_shlvl(shell->env) == ERROR)
 		return (ft_free_exit(shell));
 	return (SUCCESS);
 }
@@ -96,6 +96,8 @@ void	do_shell( t_shell *shell)
 		{
 			if (minishell(shell, (*shell).env, head) == ERROR)
 			{
+				close(shell->redir.in);
+				close(shell->redir.out);
 				ft_free_exit(shell);
 				free_final(head);
 				free(input);

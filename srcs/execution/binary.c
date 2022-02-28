@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 11:26:41 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/26 22:04:35 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/27 19:15:01 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,20 @@
 
 static void	exec_error(char *arg)
 {
-	g_signal = 127;
-	ft_putstr_fd("megashell: ", STDERR);
-	ft_putstr_fd(arg, STDERR);
-	ft_putendl_fd(": command not found", STDERR);
+	if (arg[0] == '/')
+	{
+		g_signal = 126;
+		ft_putstr_fd("megashell: ", STDERR);
+		ft_putstr_fd(arg, STDERR);
+		ft_putendl_fd(": No such file or directory", STDERR);
+	}
+	else
+	{
+		g_signal = 127;
+		ft_putstr_fd("megashell: ", STDERR);
+		ft_putstr_fd(arg, STDERR);
+		ft_putendl_fd(": command not found", STDERR);
+	}
 }
 
 static int	bin_exe_quit(char **tenv, char *path, char *arg)

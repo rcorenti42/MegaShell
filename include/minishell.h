@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:18:24 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/26 17:26:39 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/27 23:40:03 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,5 +219,7 @@ void			quit_handler(int code);
 void			handler(int code);
 void			*ft_calloc(size_t nmemb, size_t size);
 int				ft_check_char(char *str);
+char			*ft_pwd2(void);
+int				ft_shlvl(t_env *env);
 
 #endif

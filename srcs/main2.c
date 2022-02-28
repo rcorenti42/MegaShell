@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 12:49:53 by sobouatt          #+#    #+#             */
-/*   Updated: 2022/02/26 23:22:30 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/28 02:53:32 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,28 +62,22 @@ static int	ft_father(t_shell *shell)
 	int	status;
 
 	i = -1;
-	status = 0;
+	status = -1;
 	if (shell->parent)
 	{
 		while (i < shell->redir.i_pipe)
 		{
 			i++;
-			waitpid(shell->redir.pid_pipe[i], &status, 0);
+			waitpid(shell->redir.pid_pipe[i], NULL, 0);
 		}
 		waitpid(shell->redir.pid, &status, 0);
 	}
 	if (init_std(shell) == ERROR)
-		return (ERROR);	
+		return (ERROR);
 	if (shell->parent)
-	{	
 		if (WIFEXITED(status))
-		{
-			status = WEXITSTATUS(status);
-			g_signal = status;
-		}
+			g_signal = WEXITSTATUS(status);
 	return (SUCCESS);
-	}
-	return (g_signal);
 }
 
 int	something_went_wrong(t_shell *shell)

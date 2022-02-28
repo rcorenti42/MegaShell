@@ -6,7 +6,7 @@
 #    By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/16 11:41:35 by rcorenti          #+#    #+#              #
-#    Updated: 2022/02/26 03:00:05 by sobouatt         ###   ########.fr        #
+#    Updated: 2022/02/28 02:26:00 by sobouatt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,8 @@ SRCS3 = redir.c \
 	execution.c \
 	ft_export_utils.c \
 	heredoc.c \
-	ft_calloc.c
+	ft_calloc.c \
+	shlvl.c
 
 PARS = ${addsuffix /parser,${SRCS}}
 
@@ -73,7 +74,7 @@ LIBFT = libft/libft.a
 
 CC = clang
 
-CFLAGS = -g -Wall -Wextra -Werror -MMD
+CFLAGS = -Wall -Wextra -Werror -MMD
  
 OBJS = ${addprefix ${SRCS}/,${SRCS1:.c=.o}} ${addprefix ${PARS}/,${SRCS2:.c=.o}} ${addprefix ${EXEC}/,${SRCS3:.c=.o}}
 DEPS = ${OBJS:%.o=%.d}
@@ -111,13 +112,4 @@ fclean: clean
 
 re: fclean all
 
-SHELL:=/bin/bash
-
-val: 
-	@make
-	@make clean
-	@source ./home.sh
-	@valshell
-
-
-.PHONY: all clean fclean re val reval
+.PHONY: all clean fclean re

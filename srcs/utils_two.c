@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   utils_two.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcorenti <rcorenti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sobouatt <sobouatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:14:37 by rcorenti          #+#    #+#             */
-/*   Updated: 2022/02/24 07:30:10 by rcorenti         ###   ########.fr       */
+/*   Updated: 2022/02/28 02:22:10 by sobouatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*ft_pwd2(void)
+{
+	char	*cwd;
+
+	cwd = (char *)malloc(sizeof(char) * (PATH_MAX + 5));
+	if (!cwd)
+		return (NULL);
+	if (!getcwd(cwd, PATH_MAX + 5))
+	{
+		cwd = ft_memdel(cwd);
+		return (NULL);
+	}
+	return (cwd);
+}
 
 int	char_len(t_char *str)
 {
